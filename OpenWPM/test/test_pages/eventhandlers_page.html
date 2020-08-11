@@ -1,0 +1,22 @@
+<!-- sample code derived from fingerprint2.js -->
+<html>
+<title>Event Handlers Test Page</title>
+<h1>Event Handlers Test Page</h1>
+
+<pre id="EventHandlerInfo"></pre>
+<p>An example paragraph tag</p>
+
+<script>
+  const para = document.querySelector('p');
+
+  document.addEventListener('gotpointercapture', () => {
+    console.log('I\'ve been captured!')
+  });
+
+  para.addEventListener('pointerdown', (event) => {
+    para.setPointerCapture(event.pointerId);
+  });
+
+</script>
+
+</html>

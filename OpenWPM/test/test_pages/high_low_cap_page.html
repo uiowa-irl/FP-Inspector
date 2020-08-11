@@ -1,0 +1,23 @@
+<!-- sample code derived from fingerprint2.js -->
+<html>
+<title>High and Low Cap Test Page</title>
+<h1>High and Low Cap Test Page</h1>
+
+<p>An example paragraph tag</p>
+
+<canvas id="myCanvas"></canvas>
+
+<script>
+
+  var i;
+  for (i = 0; i < 1000; i++) {
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext("2d");
+    ctx.textBaseline = "top";
+    // The most common type
+    ctx.font = "14px 'Arial'";
+  } 
+  
+</script>
+
+</html>

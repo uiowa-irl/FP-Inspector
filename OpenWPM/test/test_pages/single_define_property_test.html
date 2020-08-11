@@ -1,0 +1,34 @@
+<!-- sample code derived from fingerprint2.js -->
+<html>
+<title>WebGL Property Test Page</title>
+<h1>WebGL Property Test Page</h1>
+
+<p>An example paragraph tag</p>
+
+<script>
+
+Object.defineProperty(window.navigator, 'userAgent', {
+  value: 'Mobile',
+  configurable: true
+});
+
+console.log(window.navigator.userAgent);
+
+
+console.log(window.WebGLRenderingContext.BROWSER_DEFAULT_WEBGL);
+
+Object.defineProperty(window.WebGL2RenderingContext, 'BROWSER_DEFAULT_WEBGL', {
+    value: 'I-AM-MODIFIED'
+  });
+
+// Object.defineProperty(window.WebGLRenderingContext, 'BROWSER_DEFAULT_WEBGL', {
+//     get() { return "GARBAGE"; },
+//     enumerable: true,
+//     configurable: true
+//   });
+
+  
+console.log(window.WebGLRenderingContext.BROWSER_DEFAULT_WEBGL);
+</script>
+
+</html>

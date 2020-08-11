@@ -1,0 +1,2773 @@
+<!-- sample code derived from fingerprint2.js -->
+<html>
+<title>MathTag Test Page</title>
+<h1>MathTag Test Page</h1>
+
+<pre id="MathTag"></pre>
+<p>An example paragraph tag</p>
+
+<script>
+! function() {
+    if (window.MathID) {
+        return
+    }
+    var startTime = (new Date).getTime();
+    var config = {
+            baseURL: "//mathid.mathtag.com/",
+            baseDirectURL: "//mathid-origin.mathtag.com/",
+            timeOut: 4.5 * 1e3,
+            pixelServerURL: "//pixel.mathtag.com/"
+        },
+        globalContainer, plainText = {};
+    if (typeof JSON !== "object") {
+        JSON = {}
+    }! function() {
+        "use strict";
+
+        function f(e) {
+            return e < 10 ? "0" + e : e
+        }
+        if (typeof Date.prototype.toJSON !== "function") {
+            Date.prototype.toJSON = function() {
+                return isFinite(this.valueOf()) ? this.getUTCFullYear() + "-" + f(this.getUTCMonth() + 1) + "-" + f(this.getUTCDate()) + "T" + f(this.getUTCHours()) + ":" + f(this.getUTCMinutes()) + ":" + f(this.getUTCSeconds()) + "Z" : null
+            };
+            String.prototype.toJSON = Number.prototype.toJSON = Boolean.prototype.toJSON = function() {
+                return this.valueOf()
+            }
+        }
+        var cx, escapable, gap, indent, meta, rep;
+
+        function quote(e) {
+            escapable.lastIndex = 0;
+            return escapable.test(e) ? '"' + e.replace(escapable, function(e) {
+                var t = meta[e];
+                return typeof t === "string" ? t : "\\u" + ("0000" + e.charCodeAt(0).toString(16)).slice(-4)
+            }) + '"' : '"' + e + '"'
+        }
+
+        function str(e, t) {
+            var i, n, a, r, s = gap,
+                o, l = t[e];
+            if (l && typeof l === "object" && typeof l.toJSON === "function") {
+                l = l.toJSON(e)
+            }
+            if (typeof rep === "function") {
+                l = rep.call(t, e, l)
+            }
+            switch (typeof l) {
+                case "string":
+                    return quote(l);
+                case "number":
+                    return isFinite(l) ? String(l) : "null";
+                case "boolean":
+                case "null":
+                    return String(l);
+                case "object":
+                    if (!l) {
+                        return "null"
+                    }
+                    gap += indent;
+                    o = [];
+                    if (Object.prototype.toString.apply(l) === "[object Array]") {
+                        r = l.length;
+                        for (i = 0; i < r; i += 1) {
+                            o[i] = str(i, l) || "null"
+                        }
+                        a = o.length === 0 ? "[]" : gap ? "[\n" + gap + o.join(",\n" + gap) + "\n" + s + "]" : "[" + o.join(",") + "]";
+                        gap = s;
+                        return a
+                    }
+                    if (rep && typeof rep === "object") {
+                        r = rep.length;
+                        for (i = 0; i < r; i += 1) {
+                            if (typeof rep[i] === "string") {
+                                n = rep[i];
+                                a = str(n, l);
+                                if (a) {
+                                    o.push(quote(n) + (gap ? ": " : ":") + a)
+                                }
+                            }
+                        }
+                    } else {
+                        for (n in l) {
+                            if (Object.prototype.hasOwnProperty.call(l, n)) {
+                                a = str(n, l);
+                                if (a) {
+                                    o.push(quote(n) + (gap ? ": " : ":") + a)
+                                }
+                            }
+                        }
+                    }
+                    a = o.length === 0 ? "{}" : gap ? "{\n" + gap + o.join(",\n" + gap) + "\n" + s + "}" : "{" + o.join(",") + "}";
+                    gap = s;
+                    return a
+            }
+        }
+        if (typeof JSON.stringify !== "function") {
+            escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
+            meta = {
+                "\b": "\\b",
+                "	": "\\t",
+                "\n": "\\n",
+                "\f": "\\f",
+                "\r": "\\r",
+                '"': '\\"',
+                "\\": "\\\\"
+            };
+            JSON.stringify = function(e, t, i) {
+                var n;
+                gap = "";
+                indent = "";
+                if (typeof i === "number") {
+                    for (n = 0; n < i; n += 1) {
+                        indent += " "
+                    }
+                } else if (typeof i === "string") {
+                    indent = i
+                }
+                rep = t;
+                if (t && typeof t !== "function" && (typeof t !== "object" || typeof t.length !== "number")) {
+                    throw new Error("JSON.stringify")
+                }
+                return str("", {
+                    "": e
+                })
+            }
+        }
+        if (typeof JSON.parse !== "function") {
+            cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
+            JSON.parse = function(text, reviver) {
+                var j;
+
+                function walk(e, t) {
+                    var i, n, a = e[t];
+                    if (a && typeof a === "object") {
+                        for (i in a) {
+                            if (Object.prototype.hasOwnProperty.call(a, i)) {
+                                n = walk(a, i);
+                                if (n !== undefined) {
+                                    a[i] = n
+                                } else {
+                                    delete a[i]
+                                }
+                            }
+                        }
+                    }
+                    return reviver.call(e, t, a)
+                }
+                text = String(text);
+                cx.lastIndex = 0;
+                if (cx.test(text)) {
+                    text = text.replace(cx, function(e) {
+                        return "\\u" + ("0000" + e.charCodeAt(0).toString(16)).slice(-4)
+                    })
+                }
+                if (/^[\],:{}\s]*$/.test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, "@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, "]").replace(/(?:^|:|,)(?:\s*\[)+/g, ""))) {
+                    j = eval("(" + text + ")");
+                    return typeof reviver === "function" ? walk({
+                        "": j
+                    }, "") : j
+                }
+                throw new SyntaxError("JSON.parse")
+            }
+        }
+    }();
+    var http = function() {
+        function e() {
+            var e;
+            if (window.ActiveXObject) {
+                try {
+                    e = new ActiveXObject("Microsoft.XMLHTTP")
+                } catch (t) {
+                    e = null
+                }
+            } else {
+                e = new XMLHttpRequest
+            }
+            return e
+        }
+
+        function t(e) {
+            var t = [];
+            for (var i in e) {
+                if (!e.hasOwnProperty(i)) continue;
+                t.push(encodeURIComponent(i) + "=" + encodeURIComponent(e[i]))
+            }
+            return t.join("&")
+        }
+        var i = 0;
+        return {
+            post: function(t, i) {
+                var n = new Promise,
+                    a = e();
+                if (a == null) return false;
+                a.onreadystatechange = function() {
+                    if (a.readyState === 4) {
+                        var e = a.responseText;
+                        if (e.length > 0) e = JSON.parse(e);
+                        n.resolve({
+                            code: a.status,
+                            body: e
+                        })
+                    }
+                };
+                try {
+                    a.open("POST", t, true);
+                    a.setRequestHeader("Content-type", "application/json");
+                    if (typeof i != "undefined") {
+                        a.send(JSON.stringify(i))
+                    } else {
+                        a.send()
+                    }
+                } catch (r) {
+                    n.reject(r)
+                }
+                return n
+            },
+            get: function(t, i) {
+                var n = new Promise,
+                    a = e();
+                if (a == null) return false;
+                a.onreadystatechange = function() {
+                    if (a.readyState === 4) {
+                        var e = a.responseText;
+                        if (e) e = JSON.parse(e);
+                        n.resolve({
+                            code: a.status,
+                            body: e
+                        })
+                    }
+                };
+                try {
+                    a.open("GET", t, true);
+                    if (i) {
+                        for (var r in i) {
+                            if (!i.hasOwnProperty(r)) continue;
+                            a.setRequestHeader(r, i[r])
+                        }
+                    }
+                    a.send()
+                } catch (s) {
+                    n.reject(s)
+                }
+                return n
+            },
+            jsonp: function(e, t) {
+                var n = new Promise;
+                i++;
+                var e = e + "?callback=MathID.Callbacks.t" + i;
+                for (var a in t) {
+                    if (t.hasOwnProperty(a)) {
+                        e = e + "&" + encodeURIComponent(a) + "=" + encodeURIComponent(t[a])
+                    }
+                }
+                var r = document.createElement("script");
+                MathID.Callbacks["t" + i] = function() {
+                    r.parentNode.removeChild(r);
+                    n.resolve.apply(n, arguments)
+                };
+                r.type = "text/javascript";
+                r.id = "mid-jsonpcontainer-" + i;
+                r.src = e;
+                domReady.then(function() {
+                    globalContainer.appendChild(r)
+                }).done();
+                return n
+            }
+        }
+    }();
+    var random = Math.floor(Math.random() * 100 + 1),
+        clientSidePercentageToLog = 10;
+    if (random > clientSidePercentageToLog) {
+        var stats = {
+            count: function() {},
+            time: function() {},
+            send: function() {}
+        }
+    } else {
+        var stats = {
+            data: {
+                counters: {},
+                timers: {}
+            },
+            count: function(e, t) {
+                if (typeof stats.data.counters[e] == "undefined") {
+                    stats.data.counters[e] = 0
+                }
+                stats.data.counters[e] += parseInt(t)
+            },
+            time: function(e, t) {
+                stats.data.timers[e] = t
+            },
+            send: function() {
+                setTimeout(function() {
+                    http.jsonp(config.baseURL + "d/s", {
+                        data: JSON.stringify(stats.data)
+                    });
+                    stats.data = {
+                        counters: {},
+                        timers: {}
+                    }
+                }, 2e3)
+            }
+        }
+    }
+    var Promise = function(e) {
+        this.callbacks = {
+            success: [],
+            failure: [],
+            activate: []
+        };
+        this.resolved = false;
+        this.resolvedData = null;
+        this.failed = false;
+        this.failedData = null;
+        this.activated = false;
+        if (e) {
+            this.resolved = true;
+            this.resolvedData = e
+        }
+    };
+    Promise.prototype.activate = function() {
+        if (this.activated) return;
+        this.activated = true;
+        if (this.callbacks.activate.length > 0) {
+            for (index = 0; index < this.callbacks.activate.length; index++) {
+                this.callbacks.activate[index].apply(this.callbacks.activate[index], arguments)
+            }
+        }
+    };
+    Promise.prototype.onActivate = function(e) {
+        if (typeof e != "function") return false;
+        if (this.activated) {
+            e()
+        } else {
+            this.callbacks["activate"].push(e)
+        }
+    };
+    Promise.prototype.then = function(e) {
+        if (typeof e != "function") return;
+        this.activate();
+        if (this.resolved) {
+            e.apply(e, this.resolvedData)
+        } else {
+            this.callbacks["success"].push(e)
+        }
+        return this
+    };
+    Promise.prototype.fail = function(e) {
+        if (typeof e != "function") return;
+        this.activate();
+        if (this.failed) {
+            e.apply(e, this.failedData)
+        } else {
+            this.callbacks["failure"].push(e)
+        }
+        return this
+    };
+    Promise.prototype.fin = function(e) {
+        this.then(e);
+        this.fail(e)
+    };
+    Promise.prototype.resolve = function() {
+        if (this.isFulfilled()) return;
+        this.resolved = true;
+        this.resolvedData = Array.prototype.slice.call(arguments);
+        if (this.callbacks.success.length > 0) {
+            for (index = 0; index < this.callbacks.success.length; index++) {
+                this.callbacks.success[index].apply(this.callbacks.success[index], this.resolvedData)
+            }
+        }
+    };
+    Promise.prototype.reject = function() {
+        if (this.isFulfilled()) return;
+        this.failed = true;
+        this.failedData = Array.prototype.slice.call(arguments);
+        if (this.callbacks.failure.length > 0) {
+            for (index = 0; index < this.callbacks.failure.length; index++) {
+                this.callbacks.failure[index].apply(this.callbacks.failure[index], this.failedData)
+            }
+        }
+    };
+    Promise.prototype.isFulfilled = function() {
+        return this.resolved || this.failed
+    };
+    Promise.prototype.isFulfilledOrNotActivated = function() {
+        return !this.activated || this.isFulfilled()
+    };
+    Promise.prototype.done = function() {};
+    var dataPromise = new Promise,
+        midPromise = new Promise,
+        uuidPromise = new Promise;
+    var base64 = {
+        _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+        encode: function(e) {
+            var t = "";
+            var i, n, a, r, s, o, l;
+            var u = 0;
+            e = base64._utf8_encode(e);
+            while (u < e.length) {
+                i = e.charCodeAt(u++);
+                n = e.charCodeAt(u++);
+                a = e.charCodeAt(u++);
+                r = i >> 2;
+                s = (i & 3) << 4 | n >> 4;
+                o = (n & 15) << 2 | a >> 6;
+                l = a & 63;
+                if (isNaN(n)) {
+                    o = l = 64
+                } else if (isNaN(a)) {
+                    l = 64
+                }
+                t = t + base64._keyStr.charAt(r) + base64._keyStr.charAt(s) + base64._keyStr.charAt(o) + base64._keyStr.charAt(l)
+            }
+            return t
+        },
+        _utf8_encode: function(e) {
+            e = e.replace(/\r\n/g, "\n");
+            var t = "";
+            for (var i = 0; i < e.length; i++) {
+                var n = e.charCodeAt(i);
+                if (n < 128) {
+                    t += String.fromCharCode(n)
+                } else if (n > 127 && n < 2048) {
+                    t += String.fromCharCode(n >> 6 | 192);
+                    t += String.fromCharCode(n & 63 | 128)
+                } else {
+                    t += String.fromCharCode(n >> 12 | 224);
+                    t += String.fromCharCode(n >> 6 & 63 | 128);
+                    t += String.fromCharCode(n & 63 | 128)
+                }
+            }
+            return t
+        }
+    };
+
+    function md5cycle(e, t) {
+        var i = e[0],
+            n = e[1],
+            a = e[2],
+            r = e[3];
+        i = ff(i, n, a, r, t[0], 7, -680876936);
+        r = ff(r, i, n, a, t[1], 12, -389564586);
+        a = ff(a, r, i, n, t[2], 17, 606105819);
+        n = ff(n, a, r, i, t[3], 22, -1044525330);
+        i = ff(i, n, a, r, t[4], 7, -176418897);
+        r = ff(r, i, n, a, t[5], 12, 1200080426);
+        a = ff(a, r, i, n, t[6], 17, -1473231341);
+        n = ff(n, a, r, i, t[7], 22, -45705983);
+        i = ff(i, n, a, r, t[8], 7, 1770035416);
+        r = ff(r, i, n, a, t[9], 12, -1958414417);
+        a = ff(a, r, i, n, t[10], 17, -42063);
+        n = ff(n, a, r, i, t[11], 22, -1990404162);
+        i = ff(i, n, a, r, t[12], 7, 1804603682);
+        r = ff(r, i, n, a, t[13], 12, -40341101);
+        a = ff(a, r, i, n, t[14], 17, -1502002290);
+        n = ff(n, a, r, i, t[15], 22, 1236535329);
+        i = gg(i, n, a, r, t[1], 5, -165796510);
+        r = gg(r, i, n, a, t[6], 9, -1069501632);
+        a = gg(a, r, i, n, t[11], 14, 643717713);
+        n = gg(n, a, r, i, t[0], 20, -373897302);
+        i = gg(i, n, a, r, t[5], 5, -701558691);
+        r = gg(r, i, n, a, t[10], 9, 38016083);
+        a = gg(a, r, i, n, t[15], 14, -660478335);
+        n = gg(n, a, r, i, t[4], 20, -405537848);
+        i = gg(i, n, a, r, t[9], 5, 568446438);
+        r = gg(r, i, n, a, t[14], 9, -1019803690);
+        a = gg(a, r, i, n, t[3], 14, -187363961);
+        n = gg(n, a, r, i, t[8], 20, 1163531501);
+        i = gg(i, n, a, r, t[13], 5, -1444681467);
+        r = gg(r, i, n, a, t[2], 9, -51403784);
+        a = gg(a, r, i, n, t[7], 14, 1735328473);
+        n = gg(n, a, r, i, t[12], 20, -1926607734);
+        i = hh(i, n, a, r, t[5], 4, -378558);
+        r = hh(r, i, n, a, t[8], 11, -2022574463);
+        a = hh(a, r, i, n, t[11], 16, 1839030562);
+        n = hh(n, a, r, i, t[14], 23, -35309556);
+        i = hh(i, n, a, r, t[1], 4, -1530992060);
+        r = hh(r, i, n, a, t[4], 11, 1272893353);
+        a = hh(a, r, i, n, t[7], 16, -155497632);
+        n = hh(n, a, r, i, t[10], 23, -1094730640);
+        i = hh(i, n, a, r, t[13], 4, 681279174);
+        r = hh(r, i, n, a, t[0], 11, -358537222);
+        a = hh(a, r, i, n, t[3], 16, -722521979);
+        n = hh(n, a, r, i, t[6], 23, 76029189);
+        i = hh(i, n, a, r, t[9], 4, -640364487);
+        r = hh(r, i, n, a, t[12], 11, -421815835);
+        a = hh(a, r, i, n, t[15], 16, 530742520);
+        n = hh(n, a, r, i, t[2], 23, -995338651);
+        i = ii(i, n, a, r, t[0], 6, -198630844);
+        r = ii(r, i, n, a, t[7], 10, 1126891415);
+        a = ii(a, r, i, n, t[14], 15, -1416354905);
+        n = ii(n, a, r, i, t[5], 21, -57434055);
+        i = ii(i, n, a, r, t[12], 6, 1700485571);
+        r = ii(r, i, n, a, t[3], 10, -1894986606);
+        a = ii(a, r, i, n, t[10], 15, -1051523);
+        n = ii(n, a, r, i, t[1], 21, -2054922799);
+        i = ii(i, n, a, r, t[8], 6, 1873313359);
+        r = ii(r, i, n, a, t[15], 10, -30611744);
+        a = ii(a, r, i, n, t[6], 15, -1560198380);
+        n = ii(n, a, r, i, t[13], 21, 1309151649);
+        i = ii(i, n, a, r, t[4], 6, -145523070);
+        r = ii(r, i, n, a, t[11], 10, -1120210379);
+        a = ii(a, r, i, n, t[2], 15, 718787259);
+        n = ii(n, a, r, i, t[9], 21, -343485551);
+        e[0] = add32(i, e[0]);
+        e[1] = add32(n, e[1]);
+        e[2] = add32(a, e[2]);
+        e[3] = add32(r, e[3])
+    }
+
+    function cmn(e, t, i, n, a, r) {
+        t = add32(add32(t, e), add32(n, r));
+        return add32(t << a | t >>> 32 - a, i)
+    }
+
+    function ff(e, t, i, n, a, r, s) {
+        return cmn(t & i | ~t & n, e, t, a, r, s)
+    }
+
+    function gg(e, t, i, n, a, r, s) {
+        return cmn(t & n | i & ~n, e, t, a, r, s)
+    }
+
+    function hh(e, t, i, n, a, r, s) {
+        return cmn(t ^ i ^ n, e, t, a, r, s)
+    }
+
+    function ii(e, t, i, n, a, r, s) {
+        return cmn(i ^ (t | ~n), e, t, a, r, s)
+    }
+
+    function md51(e) {
+        txt = "";
+        var t = e.length,
+            i = [1732584193, -271733879, -1732584194, 271733878],
+            n;
+        for (n = 64; n <= e.length; n += 64) {
+            md5cycle(i, md5blk(e.substring(n - 64, n)))
+        }
+        e = e.substring(n - 64);
+        var a = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        for (n = 0; n < e.length; n++) a[n >> 2] |= e.charCodeAt(n) << (n % 4 << 3);
+        a[n >> 2] |= 128 << (n % 4 << 3);
+        if (n > 55) {
+            md5cycle(i, a);
+            for (n = 0; n < 16; n++) a[n] = 0
+        }
+        a[14] = t * 8;
+        md5cycle(i, a);
+        return i
+    }
+
+    function md5blk(e) {
+        var t = [],
+            i;
+        for (i = 0; i < 64; i += 4) {
+            t[i >> 2] = e.charCodeAt(i) + (e.charCodeAt(i + 1) << 8) + (e.charCodeAt(i + 2) << 16) + (e.charCodeAt(i + 3) << 24)
+        }
+        return t
+    }
+    var hex_chr = "0123456789abcdef".split("");
+
+    function rhex(e) {
+        var t = "",
+            i = 0;
+        for (; i < 4; i++) t += hex_chr[e >> i * 8 + 4 & 15] + hex_chr[e >> i * 8 & 15];
+        return t
+    }
+
+    function hex(e) {
+        for (var t = 0; t < e.length; t++) e[t] = rhex(e[t]);
+        return e.join("")
+    }
+
+    function md5(e) {
+        return hex(md51(e))
+    }
+
+    function add32(e, t) {
+        return e + t & 4294967295
+    }
+    if (md5("hello") != "5d41402abc4b2a76b9719d911017c592") {
+        function add32(e, t) {
+            var i = (e & 65535) + (t & 65535),
+                n = (e >> 16) + (t >> 16) + (i >> 16);
+            return n << 16 | i & 65535
+        }
+    }
+    var domReady = new Promise;
+    ! function() {
+        function e() {
+            if (domReady.isFulfilled()) return;
+            if (typeof firstDOMReady == "function") firstDOMReady();
+            domReady.resolve()
+        }
+        if (document.getElementsByTagName("body").length > 0) {
+            e();
+            return
+        }
+        if (document.readyState && document.readyState == "complete") {
+            e();
+            return
+        }
+        if (document.addEventListener) {
+            document.addEventListener("DOMContentLoaded", e, false);
+            window.addEventListener("load", e, false)
+        }
+        if (/KHTML|WebKit|iCab|Trident|MSIE/i.test(navigator.userAgent)) {
+            DOMLoadTimer = setInterval(function() {
+                if (/loaded|complete/i.test(document.readyState)) {
+                    e();
+                    clearInterval(DOMLoadTimer)
+                }
+            }, 10);
+            return
+        }
+    }();
+    var probe = function() {
+        var promise = new Promise,
+            numberOfResultsFromProbes = 0,
+            resultsFromProbes = {},
+            asyncProbes = [];
+
+        function getWindowData(e, t) {
+            if (typeof window[e] != "undefined" && (typeof window[e][t] == "string" || typeof window[e][t] == "number" || typeof window[e][t] == "boolean")) {
+                return window[e][t]
+            } else {
+                return ""
+            }
+        }! function() {
+            function ieAcrobatVersion() {
+                if (window.ActiveXObject) {
+                    for (var x = 2; x < 10; x++) {
+                        try {
+                            oAcro = eval("new ActiveXObject('PDF.PdfCtrl." + x + "');");
+                            if (oAcro) return "Adobe Acrobat" + x + "?"
+                        } catch (ex) {}
+                    }
+                    try {
+                        oAcro4 = new ActiveXObject("PDF.PdfCtrl.1");
+                        if (oAcro4) return "Adobe Acrobat" + 4 + "?"
+                    } catch (ex) {}
+                    try {
+                        oAcro7 = new ActiveXObject("AcroPDF.PDF.1");
+                        if (oAcro7) return "Adobe Acrobat" + 7 + "?"
+                    } catch (ex) {}
+                    return ""
+                }
+            }
+            var plugins = [];
+            if (navigator.plugins && navigator.plugins.length > 0) {
+                var np = navigator.plugins;
+                for (var i = 0; i < np.length; i++) {
+                    plugins[i] = np[i].name
+                }
+            } else {
+                var iePlugins = ["QuickTime", "DevalVR", "Flash", "WindowsMediaplayer", "Silverlight"];
+                if (!PluginDetect) {
+                    var PluginDetect = {
+                        getNum: function(e, t) {
+                            if (!this.num(e)) {
+                                return null
+                            }
+                            var i;
+                            if (typeof t == "undefined") {
+                                i = /[\d][\d\.\_,-]*/.exec(e)
+                            } else {
+                                i = new RegExp(t).exec(e)
+                            }
+                            return i ? i[0].replace(/[\.\_-]/g, ",") : null
+                        },
+                        hasMimeType: function(e) {
+                            if (PluginDetect.isIE) {
+                                return null
+                            }
+                            var t, i, n, a = e.constructor == String ? [e] : e;
+                            for (n = 0; n < a.length; n++) {
+                                t = navigator.mimeTypes[a[n]];
+                                if (t && t.enabledPlugin) {
+                                    i = t.enabledPlugin;
+                                    if (i.name || i.description) {
+                                        return t
+                                    }
+                                }
+                            }
+                            return null
+                        },
+                        findNavPlugin: function(e, t) {
+                            var i = e.constructor == String ? e : e.join(".*"),
+                                n = t === false ? "" : "\\d",
+                                a, r = new RegExp(i + ".*" + n + "|" + n + ".*" + i, "i"),
+                                s = navigator.plugins;
+                            for (a = 0; a < s.length; a++) {
+                                if (r.test(s[a].description) || r.test(s[a].name)) {
+                                    return s[a]
+                                }
+                            }
+                            return null
+                        },
+                        AXO: window.ActiveXObject,
+                        getAXO: function(e, t) {
+                            var i = null,
+                                n, a = false;
+                            try {
+                                i = new this.AXO(e);
+                                a = true
+                            } catch (n) {}
+                            if (typeof t != "undefined") {
+                                delete i;
+                                return a
+                            }
+                            return i
+                        },
+                        num: function(e) {
+                            return typeof e != "string" ? false : /\d/.test(e)
+                        },
+                        compareNums: function(e, t) {
+                            var i = this,
+                                n, a, r, s = window.parseInt;
+                            if (!i.num(e) || !i.num(t)) {
+                                return 0
+                            }
+                            if (i.plugin && i.plugin.compareNums) {
+                                return i.plugin.compareNums(e, t)
+                            }
+                            n = e.split(",");
+                            a = t.split(",");
+                            for (r = 0; r < Math.min(n.length, a.length); r++) {
+                                if (s(n[r], 10) > s(a[r], 10)) {
+                                    return 1
+                                }
+                                if (s(n[r], 10) < s(a[r], 10)) {
+                                    return -1
+                                }
+                            }
+                            return 0
+                        },
+                        formatNum: function(e) {
+                            if (!this.num(e)) {
+                                return null
+                            }
+                            var t, i = e.replace(/\s/g, "").replace(/[\.\_]/g, ",").split(",").concat(["0", "0", "0", "0"]);
+                            for (t = 0; t < 4; t++) {
+                                if (/^(0+)(.+)$/.test(i[t])) {
+                                    i[t] = RegExp.$2
+                                }
+                            }
+                            if (!/\d/.test(i[0])) {
+                                i[0] = "0"
+                            }
+                            return i[0] + "," + i[1] + "," + i[2] + "," + i[3]
+                        },
+                        initScript: function() {
+                            var e = this,
+                                t = navigator.userAgent;
+                            e.isIE = false;
+                            e.IEver = e.isIE && /MSIE\s*(\d\.?\d*)/i.exec(t) ? parseFloat(RegExp.$1, 10) : -1;
+                            e.ActiveXEnabled = false;
+                            if (e.isIE) {
+                                var i, n = ["Msxml2.XMLHTTP", "Msxml2.DOMDocument", "Microsoft.XMLDOM", "ShockwaveFlash.ShockwaveFlash", "TDCCtl.TDCCtl", "Shell.UIHelper", "Scripting.Dictionary", "wmplayer.ocx"];
+                                for (i = 0; i < n.length; i++) {
+                                    if (e.getAXO(n[i], 1)) {
+                                        e.ActiveXEnabled = true;
+                                        break
+                                    }
+                                }
+                                e.head = typeof document.getElementsByTagName != "undefined" ? document.getElementsByTagName("head")[0] : null
+                            }
+                            e.isGecko = !e.isIE && typeof navigator.product == "string" && /Gecko/i.test(navigator.product) && /Gecko\s*\/\s*\d/i.test(t) ? true : false;
+                            e.GeckoRV = e.isGecko ? e.formatNum(/rv\s*\:\s*([\.\,\d]+)/i.test(t) ? RegExp.$1 : "0.9") : null;
+                            e.isSafari = !e.isIE && /Safari\s*\/\s*\d/i.test(t) ? true : false;
+                            e.isChrome = /Chrome\s*\/\s*\d/i.test(t) ? true : false;
+                            e.onWindowLoaded(0)
+                        },
+                        init: function(e, t) {
+                            if (typeof e != "string") {
+                                return -3
+                            }
+                            e = e.toLowerCase().replace(/\s/g, "");
+                            var i = this,
+                                n;
+                            if (typeof i[e] == "undefined") {
+                                return -3
+                            }
+                            n = i[e];
+                            i.plugin = n;
+                            if (typeof n.installed == "undefined" || t == true) {
+                                n.installed = null;
+                                n.version = null;
+                                n.version0 = null;
+                                n.getVersionDone = null;
+                                n.$ = i
+                            }
+                            i.garbage = false;
+                            if (i.isIE && !i.ActiveXEnabled) {
+                                if (i.plugin != i.java) {
+                                    return -2
+                                }
+                            }
+                            return 1
+                        },
+                        isMinVersion: function(e, t, i, n) {
+                            return -3
+                        },
+                        getVersion: function(e, t, i) {
+                            var n = PluginDetect,
+                                a = n.init(e),
+                                r;
+                            if (a < 0) {
+                                return null
+                            }
+                            r = n.plugin;
+                            if (r.getVersionDone != 1) {
+                                r.getVersion(t, i);
+                                if (r.getVersionDone === null) {
+                                    r.getVersionDone = 1
+                                }
+                            }
+                            n.cleanup();
+                            return r.version || r.version0;
+                            return null
+                        },
+                        getInfo: function(e, t, i) {
+                            var n = {};
+                            var a = PluginDetect,
+                                r = a.init(e),
+                                s;
+                            if (r < 0) {
+                                return n
+                            }
+                            s = a.plugin;
+                            if (typeof s.getInfo != "undefined") {
+                                if (s.getVersionDone === null) {
+                                    a.getVersion(e, t, i)
+                                }
+                                n = s.getInfo()
+                            }
+                            return n
+                        },
+                        cleanup: function() {
+                            var e = this;
+                            if (e.garbage && typeof window.CollectGarbage != "undefined") {
+                                window.CollectGarbage()
+                            }
+                        },
+                        isActiveXObject: function(e) {
+                            var t = this,
+                                i, n, a = "/",
+                                r = '<object width="1" height="1" style="display:none" ' + t.plugin.getCodeBaseVersion(e) + ">" + t.plugin.HTML + "<" + a + "object>";
+                            if (t.head.firstChild) {
+                                t.head.insertBefore(document.createElement("object"), t.head.firstChild)
+                            } else {
+                                t.head.appendChild(document.createElement("object"))
+                            }
+                            t.head.firstChild.outerHTML = r;
+                            try {
+                                t.head.firstChild.classid = t.plugin.classID
+                            } catch (n) {}
+                            i = false;
+                            try {
+                                if (t.head.firstChild.object) {
+                                    i = true
+                                }
+                            } catch (n) {}
+                            try {
+                                if (i && t.head.firstChild.readyState < 4) {
+                                    t.garbage = true
+                                }
+                            } catch (n) {}
+                            t.head.removeChild(t.head.firstChild);
+                            return i
+                        },
+                        codebaseSearch: function(e) {
+                            var t = this;
+                            if (!t.ActiveXEnabled) {
+                                return null
+                            }
+                            if (typeof e != "undefined") {
+                                return t.isActiveXObject(e)
+                            }
+                            var i = [0, 0, 0, 0],
+                                n, a, r = t.plugin.digits,
+                                s = function(e, n) {
+                                    var a = (e == 0 ? n : i[0]) + "," + (e == 1 ? n : i[1]) + "," + (e == 2 ? n : i[2]) + "," + (e == 3 ? n : i[3]);
+                                    return t.isActiveXObject(a)
+                                };
+                            var o, l, u = false;
+                            for (n = 0; n < r.length; n++) {
+                                o = r[n] * 2;
+                                i[n] = 0;
+                                for (a = 0; a < 20; a++) {
+                                    if (o == 1 && n > 0 && u) {
+                                        break
+                                    }
+                                    if (o - i[n] > 1) {
+                                        l = Math.round((o + i[n]) / 2);
+                                        if (s(n, l)) {
+                                            i[n] = l;
+                                            u = true
+                                        } else {
+                                            o = l
+                                        }
+                                    } else {
+                                        if (o - i[n] == 1) {
+                                            o--;
+                                            if (!u && s(n, o)) {
+                                                u = true
+                                            }
+                                            break
+                                        } else {
+                                            if (!u && s(n, o)) {
+                                                u = true
+                                            }
+                                            break
+                                        }
+                                    }
+                                }
+                                if (!u) {
+                                    return null
+                                }
+                            }
+                            return i.join(",")
+                        },
+                        dummy1: 0
+                    }
+                }
+                PluginDetect.onDetectionDone = function(e, t, i, n) {
+                    return -1
+                };
+                PluginDetect.onWindowLoaded = function(e) {
+                    var t = PluginDetect,
+                        i = window;
+                    if (t.EventWinLoad === true) {} else {
+                        t.winLoaded = false;
+                        t.EventWinLoad = true;
+                        if (typeof i.addEventListener != "undefined") {
+                            i.addEventListener("load", t.runFuncs, false)
+                        } else {
+                            if (typeof i.attachEvent != "undefined") {
+                                i.attachEvent("onload", t.runFuncs)
+                            } else {
+                                if (typeof i.onload == "function") {
+                                    t.funcs[t.funcs.length] = i.onload
+                                }
+                                i.onload = t.runFuncs
+                            }
+                        }
+                    }
+                    if (typeof e == "function") {
+                        t.funcs[t.funcs.length] = e
+                    }
+                };
+                PluginDetect.funcs = [0];
+                PluginDetect.runFuncs = function() {
+                    var e = PluginDetect,
+                        t;
+                    e.winLoaded = true;
+                    for (t = 0; t < e.funcs.length; t++) {
+                        if (typeof e.funcs[t] == "function") {
+                            e.funcs[t](e);
+                            e.funcs[t] = null
+                        }
+                    }
+                };
+                PluginDetect.quicktime = {
+                    mimeType: ["video/quicktime", "application/x-quicktimeplayer", "image/x-macpaint", "image/x-quicktime"],
+                    progID: "QuickTimeCheckObject.QuickTimeCheck.1",
+                    progID0: "QuickTime.QuickTime",
+                    classID: "clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B",
+                    minIEver: 7,
+                    HTML: '<param name="src" value="A14999.mov" /><param name="controller" value="false" />',
+                    getCodeBaseVersion: function(e) {
+                        return 'codebase="#version=' + e + '"'
+                    },
+                    digits: [8, 64, 16, 0],
+                    clipTo3digits: function(e) {
+                        if (e === null || typeof e == "undefined") {
+                            return null
+                        }
+                        var t, i, n, a = this.$;
+                        t = e.split(",");
+                        if (a.compareNums(e, "7,60,0,0") < 0 && a.compareNums(e, "7,50,0,0") >= 0) {
+                            i = t[0] + "," + t[1].charAt(0) + "," + t[1].charAt(1) + "," + t[2]
+                        } else {
+                            i = t[0] + "," + t[1] + "," + t[2] + "," + t[3]
+                        }
+                        n = i.split(",");
+                        return n[0] + "," + n[1] + "," + n[2] + ",0"
+                    },
+                    getVersion: function() {
+                        var e = null,
+                            t, i = this.$,
+                            n = true;
+                        if (!i.isIE) {
+                            if (navigator.platform && /linux/i.test(navigator.platform)) {
+                                n = false
+                            }
+                            if (n) {
+                                t = i.findNavPlugin(["QuickTime", "(Plug-in|Plugin)"]);
+                                if (t && t.name && i.hasMimeType(this.mimeType)) {
+                                    e = i.getNum(t.name)
+                                }
+                            }
+                            this.installed = e ? 1 : -1
+                        } else {
+                            var a;
+                            if (i.IEver >= this.minIEver && i.getAXO(this.progID0, 1)) {
+                                e = i.codebaseSearch()
+                            } else {
+                                a = i.getAXO(this.progID);
+                                if (a && a.QuickTimeVersion) {
+                                    e = a.QuickTimeVersion.toString(16);
+                                    e = e.charAt(0) + "." + e.charAt(1) + "." + e.charAt(2)
+                                }
+                            }
+                            this.installed = e ? 1 : i.getAXO(this.progID0, 1) ? 0 : -1
+                        }
+                        this.version = this.clipTo3digits(i.formatNum(e))
+                    }
+                };
+                PluginDetect.java = {
+                    mimeType: "application/x-java-applet",
+                    classID: "clsid:8AD9C840-044E-11D1-B3E9-00805F499D93",
+                    DTKclassID: "clsid:CAFEEFAC-DEC7-0000-0000-ABCDEFFEDCBA",
+                    DTKmimeType: "application/npruntime-scriptable-plugin;DeploymentToolkit",
+                    JavaVersions: [
+                        [1, 9, 2, 25],
+                        [1, 8, 2, 25],
+                        [1, 7, 2, 25],
+                        [1, 6, 2, 25],
+                        [1, 5, 2, 25],
+                        [1, 4, 2, 25],
+                        [1, 3, 1, 25]
+                    ],
+                    searchJavaPluginAXO: function() {
+                        var e = null,
+                            t = this,
+                            i = t.$,
+                            n = [],
+                            a = [1, 5, 0, 14],
+                            r = [1, 6, 0, 2],
+                            s = [1, 3, 1, 0],
+                            o = [1, 4, 2, 0],
+                            l = [1, 5, 0, 7],
+                            u = false;
+                        if (!i.ActiveXEnabled) {
+                            return null
+                        }
+                        u = true;
+                        if (i.IEver >= t.minIEver) {
+                            n = t.searchJavaAXO(r, r, u);
+                            if (n.length > 0 && u) {
+                                n = t.searchJavaAXO(a, a, u)
+                            }
+                        } else {
+                            if (u) {
+                                n = t.searchJavaAXO(l, l, true)
+                            }
+                            if (n.length == 0) {
+                                n = t.searchJavaAXO(s, o, false)
+                            }
+                        }
+                        if (n.length > 0) {
+                            e = n[0]
+                        }
+                        t.JavaPlugin_versions = [].concat(n);
+                        return e
+                    },
+                    searchJavaAXO: function(e, t, i) {
+                        var n, a, r = this.$,
+                            s, o, l, u, c, f, d, p = [];
+                        if (r.compareNums(e.join(","), t.join(",")) > 0) {
+                            t = e
+                        }
+                        t = r.formatNum(t.join(","));
+                        var g, m = "1,4,2,0",
+                            h = "JavaPlugin." + e[0] + "" + e[1] + "" + e[2] + "" + (e[3] > 0 ? "_" + (e[3] < 10 ? "0" : "") + e[3] : "");
+                        for (n = 0; n < this.JavaVersions.length; n++) {
+                            a = this.JavaVersions[n];
+                            s = "JavaPlugin." + a[0] + "" + a[1];
+                            c = a[0] + "." + a[1] + ".";
+                            for (l = a[2]; l >= 0; l--) {
+                                d = "JavaWebStart.isInstalled." + c + l + ".0";
+                                if (r.compareNums(a[0] + "," + a[1] + "," + l + ",0", t) >= 0 && !r.getAXO(d, 1)) {
+                                    continue
+                                }
+                                g = r.compareNums(a[0] + "," + a[1] + "," + l + ",0", m) < 0 ? true : false;
+                                for (u = a[3]; u >= 0; u--) {
+                                    o = l + "_" + (u < 10 ? "0" + u : u);
+                                    f = s + o;
+                                    if (r.getAXO(f, 1) && (g || r.getAXO(d, 1))) {
+                                        p[p.length] = c + o;
+                                        if (!i) {
+                                            return p
+                                        }
+                                    }
+                                    if (f == h) {
+                                        return p
+                                    }
+                                }
+                                if (r.getAXO(s + l, 1) && (g || r.getAXO(d, 1))) {
+                                    p[p.length] = c + l;
+                                    if (!i) {
+                                        return p
+                                    }
+                                }
+                                if (s + l == h) {
+                                    return p
+                                }
+                            }
+                        }
+                        return p
+                    },
+                    minIEver: 7,
+                    getFromMimeType: function(e) {
+                        var t, i, n = this.$,
+                            a = new RegExp(e),
+                            r, s, o = {},
+                            l = 0,
+                            u, c = [""];
+                        for (t = 0; t < navigator.mimeTypes.length; t++) {
+                            s = navigator.mimeTypes[t];
+                            if (a.test(s.type) && s.enabledPlugin) {
+                                s = s.type.substring(s.type.indexOf("=") + 1, s.type.length);
+                                r = "a" + n.formatNum(s);
+                                if (typeof o[r] == "undefined") {
+                                    o[r] = s;
+                                    l++
+                                }
+                            }
+                        }
+                        for (i = 0; i < l; i++) {
+                            u = "0,0,0,0";
+                            for (t in o) {
+                                if (o[t]) {
+                                    r = t.substring(1, t.length);
+                                    if (n.compareNums(r, u) > 0) {
+                                        u = r
+                                    }
+                                }
+                            }
+                            c[i] = o["a" + u];
+                            o["a" + u] = null
+                        }
+                        if (!/windows|macintosh/i.test(navigator.userAgent)) {
+                            c = [c[0]]
+                        }
+                        return c
+                    },
+                    queryJavaHandler: function() {
+                        var e = PluginDetect.java,
+                            t = window.java,
+                            i;
+                        e.hasRun = true;
+                        try {
+                            if (typeof t.lang != "undefined" && typeof t.lang.System != "undefined") {
+                                e.value = [t.lang.System.getProperty("java.version") + " ", t.lang.System.getProperty("java.vendor") + " "]
+                            }
+                        } catch (i) {}
+                    },
+                    queryJava: function() {
+                        var e = this,
+                            t = e.$,
+                            i = navigator.userAgent,
+                            n;
+                        if (typeof window.java != "undefined" && navigator.javaEnabled() && !e.hasRun) {
+                            if (t.isGecko) {
+                                if (t.hasMimeType("application/x-java-vm")) {
+                                    try {
+                                        var a = document.createElement("div"),
+                                            r = document.createEvent("HTMLEvents");
+                                        r.initEvent("focus", false, true);
+                                        a.addEventListener("focus", e.queryJavaHandler, false);
+                                        a.dispatchEvent(r)
+                                    } catch (n) {}
+                                    if (!e.hasRun) {
+                                        e.queryJavaHandler()
+                                    }
+                                }
+                            } else {
+                                if (/opera.9\.(0|1)/i.test(i) && /mac/i.test(i)) {} else {
+                                    if (!e.hasRun) {
+                                        e.queryJavaHandler()
+                                    }
+                                }
+                            }
+                        }
+                        return e.value
+                    },
+                    forceVerifyTag: [],
+                    jar: [],
+                    VENDORS: ["Sun Microsystems Inc.", "Apple Computer, Inc."],
+                    init: function() {
+                        var e = this,
+                            t = e.$;
+                        if (typeof e.app != "undefined") {
+                            e.delJavaApplets(t)
+                        }
+                        e.hasRun = false;
+                        e.value = [null, null];
+                        e.useTag = [2, 2, 2];
+                        e.app = [0, 0, 0, 0, 0, 0];
+                        e.appi = 3;
+                        e.queryDTKresult = null;
+                        e.OTF = 0;
+                        e.BridgeResult = [
+                            [null, null],
+                            [null, null],
+                            [null, null]
+                        ];
+                        e.JavaActive = [0, 0, 0];
+                        e.All_versions = [];
+                        e.DeployTK_versions = [];
+                        e.MimeType_versions = [];
+                        e.JavaPlugin_versions = [];
+                        e.funcs = [];
+                        var i = e.NOTF;
+                        if (i) {
+                            i.$ = t;
+                            if (i.javaInterval) {
+                                clearInterval(i.javaInterval)
+                            }
+                            i.EventJavaReady = null;
+                            i.javaInterval = null;
+                            i.count = 0;
+                            i.intervalLength = 250;
+                            i.countMax = 40
+                        }
+                        e.lateDetection = t.winLoaded;
+                        if (!e.lateDetection) {
+                            t.onWindowLoaded(e.delJavaApplets)
+                        }
+                    },
+                    getVersion: function(e, t) {
+                        var i, n = this,
+                            a = n.$,
+                            r = null,
+                            s = null,
+                            o = null,
+                            l = navigator.javaEnabled();
+                        if (n.getVersionDone === null) {
+                            n.init()
+                        }
+                        var u;
+                        if (typeof t != "undefined" && t.constructor == Array) {
+                            for (u = 0; u < n.useTag.length; u++) {
+                                if (typeof t[u] == "number") {
+                                    n.useTag[u] = t[u]
+                                }
+                            }
+                        }
+                        for (u = 0; u < n.forceVerifyTag.length; u++) {
+                            n.useTag[u] = n.forceVerifyTag[u]
+                        }
+                        if (typeof e != "undefined") {
+                            n.jar[n.jar.length] = e
+                        }
+                        if (n.getVersionDone == 0) {
+                            if (!n.version || n.useAnyTag()) {
+                                i = n.queryExternalApplet(e);
+                                if (i[0]) {
+                                    o = i[0];
+                                    s = i[1]
+                                }
+                            }
+                            n.EndGetVersion(o, s);
+                            return
+                        }
+                        var c = n.queryDeploymentToolKit();
+                        if (typeof c == "string" && c.length > 0) {
+                            r = c;
+                            s = n.VENDORS[0]
+                        }
+                        if (!a.isIE) {
+                            var f, d, p, g, m;
+                            m = a.hasMimeType(n.mimeType);
+                            g = m && l ? true : false;
+                            if (n.MimeType_versions.length == 0 && m) {
+                                i = n.getFromMimeType("application/x-java-applet.*jpi-version.*=");
+                                if (i[0] != "") {
+                                    if (!r) {
+                                        r = i[0]
+                                    }
+                                    n.MimeType_versions = i
+                                }
+                            }
+                            if (!r && m) {
+                                i = "Java[^\\d]*Plug-in";
+                                p = a.findNavPlugin(i);
+                                if (p) {
+                                    i = new RegExp(i, "i");
+                                    f = i.test(p.description) ? a.getNum(p.description) : null;
+                                    d = i.test(p.name) ? a.getNum(p.name) : null;
+                                    if (f && d) {
+                                        r = a.compareNums(a.formatNum(f), a.formatNum(d)) >= 0 ? f : d
+                                    } else {
+                                        r = f || d
+                                    }
+                                }
+                            }
+                            if (!r && m && /macintosh.*safari/i.test(navigator.userAgent)) {
+                                p = a.findNavPlugin("Java.*\\d.*Plug-in.*Cocoa", false);
+                                if (p) {
+                                    f = a.getNum(p.description);
+                                    if (f) {
+                                        r = f
+                                    }
+                                }
+                            }
+                            if (r) {
+                                n.version0 = r;
+                                if (l) {
+                                    o = r
+                                }
+                            }
+                            if (!o || n.useAnyTag()) {
+                                p = n.queryExternalApplet(e);
+                                if (p[0]) {
+                                    o = p[0];
+                                    s = p[1]
+                                }
+                            }
+                            if (!o) {
+                                p = n.queryJava();
+                                if (p[0]) {
+                                    n.version0 = p[0];
+                                    o = p[0];
+                                    s = p[1];
+                                    if (n.installed == -.5) {
+                                        n.installed = .5
+                                    }
+                                }
+                            }
+                            if (n.installed === null && !o && g && !/macintosh.*ppc/i.test(navigator.userAgent)) {
+                                i = n.getFromMimeType("application/x-java-applet.*version.*=");
+                                if (i[0] != "") {
+                                    o = i[0]
+                                }
+                            }
+                            if (!o && g) {
+                                if (/macintosh.*safari/i.test(navigator.userAgent)) {
+                                    if (n.installed === null) {
+                                        n.installed = 0
+                                    } else {
+                                        if (n.installed == -.5) {
+                                            n.installed = .5
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            if (!r && c != -1) {
+                                r = n.searchJavaPluginAXO();
+                                if (r) {
+                                    s = n.VENDORS[0]
+                                }
+                            }
+                            if (!r) {
+                                n.JavaFix()
+                            }
+                            if (r) {
+                                n.version0 = r;
+                                if (l && a.ActiveXEnabled) {
+                                    o = r
+                                }
+                            }
+                            if (!o || n.useAnyTag()) {
+                                i = n.queryExternalApplet(e);
+                                if (i[0]) {
+                                    o = i[0];
+                                    s = i[1]
+                                }
+                            }
+                        }
+                        if (n.installed === null) {
+                            n.installed = o ? 1 : r ? -.2 : -1
+                        }
+                        n.EndGetVersion(o, s)
+                    },
+                    EndGetVersion: function(e, t) {
+                        var i = this,
+                            n = i.$;
+                        if (i.version0) {
+                            i.version0 = n.formatNum(n.getNum(i.version0))
+                        }
+                        if (e) {
+                            i.version = n.formatNum(n.getNum(e));
+                            i.vendor = typeof t == "string" ? t : ""
+                        }
+                        if (i.getVersionDone != 1) {
+                            i.getVersionDone = 0
+                        }
+                    },
+                    queryDeploymentToolKit: function() {
+                        var e = this,
+                            t = e.$,
+                            i, n, a = null,
+                            r = null;
+                        if (t.isGecko && t.compareNums(t.GeckoRV, t.formatNum("1.6")) <= 0 || t.isSafari || t.isIE && !t.ActiveXEnabled) {
+                            e.queryDTKresult = 0
+                        }
+                        if (e.queryDTKresult !== null) {
+                            return e.queryDTKresult
+                        }
+                        if (t.isIE && t.IEver >= 6) {
+                            e.app[0] = t.instantiate("object", [], []);
+                            a = t.getObject(e.app[0])
+                        } else {
+                            if (!t.isIE && t.hasMimeType(e.DTKmimeType)) {
+                                e.app[0] = t.instantiate("object", ["type", e.DTKmimeType], []);
+                                a = t.getObject(e.app[0])
+                            }
+                        }
+                        if (a) {
+                            if (t.isIE && t.IEver >= 6) {
+                                try {
+                                    a.classid = e.DTKclassID
+                                } catch (i) {}
+                            }
+                            try {
+                                var s, o = a.jvms;
+                                if (o) {
+                                    r = o.getLength();
+                                    if (typeof r == "number") {
+                                        for (n = 0; n < r; n++) {
+                                            s = o.get(r - 1 - n);
+                                            if (s) {
+                                                s = s.version;
+                                                if (t.getNum(s)) {
+                                                    e.DeployTK_versions[n] = s
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (i) {}
+                        }
+                        t.hideObject(a);
+                        e.queryDTKresult = e.DeployTK_versions.length > 0 ? e.DeployTK_versions[0] : r == 0 ? -1 : 0;
+                        return e.queryDTKresult
+                    },
+                    queryExternalApplet: function(e) {
+                        var t = this,
+                            i = t.$,
+                            n = t.BridgeResult,
+                            a = t.app,
+                            r = t.appi,
+                            s = "&nbsp;&nbsp;&nbsp;&nbsp;";
+                        if (typeof e != "string" || !/\.jar\s*$/.test(e)) {
+                            return [null, null]
+                        }
+                        if (t.OTF < 1) {
+                            t.OTF = 1
+                        }
+                        if (!i.isIE) {
+                            if ((i.isGecko || i.isChrome) && !i.hasMimeType(t.mimeType) && !t.queryJava()[0]) {
+                                return [null, null]
+                            }
+                        }
+                        if (t.OTF < 2) {
+                            t.OTF = 2
+                        }
+                        if (!a[r] && t.canUseObjectTag() && t.canUseThisTag(0)) {
+                            a[1] = i.instantiate("object", [], [], s);
+                            a[r] = i.isIE ? i.instantiate("object", ["archive", e, "code", "A.class", "type", t.mimeType], ["archive", e, "code", "A.class", "mayscript", "true", "scriptable", "true"], s) : i.instantiate("object", ["archive", e, "classid", "java:A.class", "type", t.mimeType], ["archive", e, "mayscript", "true", "scriptable", "true"], s);
+                            n[0] = [0, 0];
+                            t.query1Applet(r)
+                        }
+                        if (!a[r + 1] && t.canUseAppletTag() && t.canUseThisTag(1)) {
+                            a[r + 1] = i.instantiate("applet", ["archive", e, "code", "A.class", "alt", s, "mayscript", "true"], ["mayscript", "true"], s);
+                            n[1] = [0, 0];
+                            t.query1Applet(r + 1)
+                        }
+                        if (i.isIE && !a[r + 2] && t.canUseObjectTag() && t.canUseThisTag(2)) {
+                            a[r + 2] = i.instantiate("object", ["classid", t.classID], ["archive", e, "code", "A.class", "mayscript", "true", "scriptable", "true"], s);
+                            n[2] = [0, 0];
+                            t.query1Applet(r + 2)
+                        }
+                        var o, l = 0;
+                        for (o = 0; o < n.length; o++) {
+                            if (a[r + o] || t.canUseThisTag(o)) {
+                                l++
+                            } else {
+                                break
+                            }
+                        }
+                        if (l == n.length) {
+                            t.getVersionDone = 1;
+                            if (t.forceVerifyTag.length > 0) {
+                                t.getVersionDone = 0
+                            }
+                        }
+                        return t.getBR()
+                    },
+                    canUseAppletTag: function() {
+                        return !this.$.isIE || navigator.javaEnabled() ? true : false
+                    },
+                    canUseObjectTag: function() {
+                        return !this.$.isIE || this.$.ActiveXEnabled ? true : false
+                    },
+                    useAnyTag: function() {
+                        var e = this,
+                            t;
+                        for (t = 0; t < e.useTag.length; t++) {
+                            if (e.canUseThisTag(t)) {
+                                return true
+                            }
+                        }
+                        return false
+                    },
+                    canUseThisTag: function(e) {
+                        var t = this,
+                            i = t.$;
+                        if (t.useTag[e] == 3) {
+                            return true
+                        }
+                        if (!t.version0 || !navigator.javaEnabled() || i.isIE && !i.ActiveXEnabled) {
+                            if (t.useTag[e] == 2) {
+                                return true
+                            }
+                            if (t.useTag[e] == 1 && !t.getBR()[0]) {
+                                return true
+                            }
+                        }
+                        return false
+                    },
+                    getBR: function() {
+                        var e = this.BridgeResult,
+                            t;
+                        for (t = 0; t < e.length; t++) {
+                            if (e[t][0]) {
+                                return [e[t][0], e[t][1]]
+                            }
+                        }
+                        return [e[0][0], e[0][1]]
+                    },
+                    delJavaApplets: function(e) {
+                        var t = e.java.app,
+                            i;
+                        for (i = t.length - 1; i >= 0; i--) {
+                            e.uninstantiate(t[i])
+                        }
+                    },
+                    query1Applet: function(e) {
+                        var t, i = this,
+                            n = i.$,
+                            a = null,
+                            r = null,
+                            s = n.getObject(i.app[e], true);
+                        try {
+                            if (s) {
+                                a = s.getVersion() + " ";
+                                r = s.getVendor() + " ";
+                                if (n.num(a)) {
+                                    i.BridgeResult[e - i.appi] = [a, r];
+                                    n.hideObject(i.app[e])
+                                }
+                                if (n.isIE && a && s.readyState != 4) {
+                                    n.garbage = true;
+                                    n.uninstantiate(i.app[e])
+                                }
+                            }
+                        } catch (t) {}
+                    },
+                    NOTF: {
+                        isJavaActive: function() {}
+                    },
+                    append: function(e, t) {
+                        for (var i = 0; i < t.length; i++) {
+                            e[e.length] = t[i]
+                        }
+                    },
+                    getInfo: function() {
+                        var e = {};
+                        var t = this,
+                            i = t.$,
+                            n, a = t.installed;
+                        e = {
+                            All_versions: [],
+                            DeployTK_versions: [],
+                            MimeType_versions: [],
+                            DeploymentToolkitPlugin: t.queryDTKresult == 0 ? false : true,
+                            vendor: typeof t.vendor == "string" ? t.vendor : "",
+                            OTF: t.OTF < 3 ? 0 : t.OTF == 3 ? 1 : 2
+                        };
+                        var r = [null, null, null];
+                        for (n = 0; n < t.BridgeResult.length; n++) {
+                            r[n] = t.BridgeResult[n][0] ? 1 : t.JavaActive[n] == 1 ? 0 : t.useTag[n] >= 1 && t.OTF >= 1 && t.OTF != 3 && !(n == 2 && !i.isIE) && (t.BridgeResult[n][0] !== null || n == 1 && !t.canUseAppletTag() || n != 1 && !t.canUseObjectTag() || a == -.2 || a == -1) ? -1 : null
+                        }
+                        e.objectTag = r[0];
+                        e.appletTag = r[1];
+                        e.objectTagActiveX = r[2];
+                        var s = e.All_versions,
+                            o = e.DeployTK_versions,
+                            l = e.MimeType_versions,
+                            u = t.JavaPlugin_versions;
+                        t.append(o, t.DeployTK_versions);
+                        t.append(l, t.MimeType_versions);
+                        t.append(s, o.length > 0 ? o : l.length > 0 ? l : u.length > 0 ? u : typeof t.version == "string" ? [t.version] : []);
+                        for (n = 0; n < s.length; n++) {
+                            s[n] = i.formatNum(i.getNum(s[n]))
+                        }
+                        var c, f = null;
+                        if (!i.isIE) {
+                            c = l.length > 0 ? i.hasMimeType(t.mimeType + ";jpi-version=" + l[0]) : i.hasMimeType(t.mimeType);
+                            if (c) {
+                                f = c.enabledPlugin
+                            }
+                        }
+                        e.name = f ? f.name : "";
+                        e.description = f ? f.description : "";
+                        var d = null;
+                        if ((a == 0 || a == 1) && e.vendor == "") {
+                            if (/macintosh/i.test(navigator.userAgent)) {
+                                d = t.VENDORS[1]
+                            } else {
+                                if (!i.isIE && /windows/i.test(navigator.userAgent)) {
+                                    d = t.VENDORS[0]
+                                } else {
+                                    if (/linux/i.test(navigator.userAgent)) {
+                                        d = t.VENDORS[0]
+                                    }
+                                }
+                            }
+                            if (d) {
+                                e.vendor = d
+                            }
+                        }
+                        return e
+                    },
+                    JavaFix: function() {}
+                };
+                PluginDetect.devalvr = {
+                    mimeType: "application/x-devalvrx",
+                    progID: "DevalVRXCtrl.DevalVRXCtrl.1",
+                    classID: "clsid:5D2CF9D0-113A-476B-986F-288B54571614",
+                    getVersion: function() {
+                        var e = null,
+                            t, i = this.$,
+                            n;
+                        if (!i.isIE) {
+                            t = i.findNavPlugin("DevalVR");
+                            if (t && t.name && i.hasMimeType(this.mimeType)) {
+                                e = t.description.split(" ")[3]
+                            }
+                            this.installed = e ? 1 : -1
+                        } else {
+                            var a, r, s;
+                            r = i.getAXO(this.progID, 1);
+                            if (r) {
+                                a = i.instantiate("object", ["classid", this.classID], ["src", ""]);
+                                s = i.getObject(a);
+                                if (s) {
+                                    try {
+                                        if (s.pluginversion) {
+                                            e = "00000000" + s.pluginversion.toString(16);
+                                            e = e.substr(e.length - 8, 8);
+                                            e = parseInt(e.substr(0, 2), 16) + "," + parseInt(e.substr(2, 2), 16) + "," + parseInt(e.substr(4, 2), 16) + "," + parseInt(e.substr(6, 2), 16)
+                                        }
+                                    } catch (n) {}
+                                }
+                                i.uninstantiate(a)
+                            }
+                            this.installed = e ? 1 : r ? 0 : -1
+                        }
+                        this.version = i.formatNum(e)
+                    }
+                };
+                PluginDetect.flash = {
+                    mimeType: ["application/x-shockwave-flash", "application/futuresplash"],
+                    progID: "ShockwaveFlash.ShockwaveFlash",
+                    classID: "clsid:D27CDB6E-AE6D-11CF-96B8-444553540000",
+                    getVersion: function() {
+                        var e = function(e) {
+                            if (!e) {
+                                return null
+                            }
+                            var t = /[\d][\d\,\.\s]*[rRdD]{0,1}[\d\,]*/.exec(e);
+                            return t ? t[0].replace(/[rRdD\.]/g, ",").replace(/\s/g, "") : null
+                        };
+                        var t, i = this.$,
+                            n, a, r = null,
+                            s = null,
+                            o = null;
+                        if (!i.isIE) {
+                            t = i.findNavPlugin("Flash");
+                            if (t && t.description && i.hasMimeType(this.mimeType)) {
+                                r = e(t.description)
+                            }
+                        } else {
+                            for (a = 15; a > 2; a--) {
+                                s = i.getAXO(this.progID + "." + a);
+                                if (s) {
+                                    o = a.toString();
+                                    break
+                                }
+                            }
+                            if (o == "6") {
+                                try {
+                                    s.AllowScriptAccess = "always"
+                                } catch (n) {
+                                    return "6,0,21,0"
+                                }
+                            }
+                            try {
+                                r = e(s.GetVariable("$version"))
+                            } catch (n) {}
+                            if (!r && o) {
+                                r = o
+                            }
+                        }
+                        this.installed = r ? 1 : -1;
+                        this.version = i.formatNum(r);
+                        return true
+                    }
+                };
+                PluginDetect.shockwave = {
+                    mimeType: "application/x-director",
+                    progID: "SWCtl.SWCtl",
+                    classID: "clsid:166B1BCA-3F9C-11CF-8075-444553540000",
+                    getVersion: function() {
+                        var e = null,
+                            t = null,
+                            i, n, a = this.$;
+                        if (!a.isIE) {
+                            n = a.findNavPlugin("Shockwave for Director");
+                            if (n && n.description && a.hasMimeType(this.mimeType)) {
+                                e = a.getNum(n.description)
+                            }
+                        } else {
+                            try {
+                                t = a.getAXO(this.progID).ShockwaveVersion("")
+                            } catch (i) {}
+                            if (typeof t == "string" && t.length > 0) {
+                                e = a.getNum(t)
+                            } else {
+                                if (a.getAXO(this.progID + ".8", 1)) {
+                                    e = "8"
+                                } else {
+                                    if (a.getAXO(this.progID + ".7", 1)) {
+                                        e = "7"
+                                    } else {
+                                        if (a.getAXO(this.progID + ".1", 1)) {
+                                            e = "6"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        this.installed = e ? 1 : -1;
+                        this.version = a.formatNum(e)
+                    }
+                };
+                PluginDetect.div = null;
+                PluginDetect.pluginSize = 1;
+                PluginDetect.DOMbody = null;
+                PluginDetect.uninstantiate = function(e) {
+                    var t, i = this;
+                    if (!e) {
+                        return
+                    }
+                    try {
+                        if (e[0] && e[0].firstChild) {
+                            e[0].removeChild(e[0].firstChild)
+                        }
+                        if (e[0] && i.div) {
+                            i.div.removeChild(e[0])
+                        }
+                        if (i.div && i.div.childNodes.length == 0) {
+                            i.div.parentNode.removeChild(i.div);
+                            i.div = null;
+                            if (i.DOMbody && i.DOMbody.parentNode) {
+                                i.DOMbody.parentNode.removeChild(i.DOMbody)
+                            }
+                            i.DOMbody = null
+                        }
+                        e[0] = null
+                    } catch (t) {}
+                };
+                PluginDetect.getObject = function(e, t) {
+                    var i, n = this,
+                        a = null;
+                    try {
+                        if (e && e[0] && e[0].firstChild) {
+                            a = e[0].firstChild
+                        }
+                    } catch (i) {}
+                    try {
+                        if (t && a && typeof a.focus != "undefined" && typeof document.hasFocus != "undefined" && !document.hasFocus()) {
+                            a.focus()
+                        }
+                    } catch (i) {}
+                    return a
+                };
+                PluginDetect.getContainer = function(e) {
+                    var t, i = null;
+                    if (e && e[0]) {
+                        i = e[0]
+                    }
+                    return i
+                };
+                PluginDetect.hideObject = function(e) {
+                    var t = this.getObject(e);
+                    if (t && t.style) {
+                        t.style.height = "0"
+                    }
+                };
+                PluginDetect.instantiate = function(e, t, i, n) {
+                    var a = function(e) {
+                        var t = e.style;
+                        if (!t) {
+                            return
+                        }
+                        t.border = "0px";
+                        t.padding = "0px";
+                        t.margin = "0px";
+                        t.fontSize = o.pluginSize + 3 + "px";
+                        t.height = o.pluginSize + 3 + "px";
+                        t.visibility = "visible";
+                        if (e.tagName && e.tagName.toLowerCase() == "div") {
+                            t.width = "100%";
+                            t.display = "block"
+                        } else {
+                            if (e.tagName && e.tagName.toLowerCase() == "span") {
+                                t.width = o.pluginSize + "px";
+                                t.display = "inline"
+                            }
+                        }
+                    };
+                    var r, s = document,
+                        o = this,
+                        l, u = s.getElementsByTagName("body")[0] || s.body,
+                        c = s.createElement("span"),
+                        f, d, p = "/";
+                    if (typeof n == "undefined") {
+                        n = ""
+                    }
+                    l = "<" + e + ' width="' + o.pluginSize + '" height="' + o.pluginSize + '" ';
+                    for (f = 0; f < t.length; f = f + 2) {
+                        l += t[f] + '="' + t[f + 1] + '" '
+                    }
+                    l += ">";
+                    for (f = 0; f < i.length; f = f + 2) {
+                        l += '<param name="' + i[f] + '" value="' + i[f + 1] + '" />'
+                    }
+                    l += n + "<" + p + e + ">";
+                    if (!o.div) {
+                        o.div = s.createElement("div");
+                        d = s.getElementById("plugindetect");
+                        if (d) {
+                            a(d);
+                            d.appendChild(o.div)
+                        } else {
+                            if (u) {
+                                try {
+                                    if (u.firstChild && typeof u.insertBefore != "undefined") {
+                                        u.insertBefore(o.div, u.firstChild)
+                                    } else {
+                                        u.appendChild(o.div)
+                                    }
+                                } catch (r) {}
+                            } else {
+                                try {
+                                    s.write('<div id="pd33993399">o<' + p + "div>");
+                                    u = s.getElementsByTagName("body")[0] || s.body;
+                                    u.appendChild(o.div);
+                                    u.removeChild(s.getElementById("pd33993399"))
+                                } catch (r) {
+                                    try {
+                                        o.DOMbody = s.createElement("body");
+                                        s.getElementsByTagName("html")[0].appendChild(o.DOMbody);
+                                        o.DOMbody.appendChild(o.div)
+                                    } catch (r) {}
+                                }
+                            }
+                        }
+                        a(o.div)
+                    }
+                    if (o.div && o.div.parentNode && o.div.parentNode.parentNode) {
+                        o.div.appendChild(c);
+                        try {
+                            c.innerHTML = l
+                        } catch (r) {}
+                        a(c);
+                        return [c]
+                    }
+                    return [null]
+                };
+                PluginDetect.windowsmediaplayer = {
+                    mimeType: ["application/x-mplayer2", "application/asx"],
+                    progID: "wmplayer.ocx",
+                    classID: "clsid:6BF52A52-394A-11D3-B153-00C04F79FAA6",
+                    getVersion: function() {
+                        var e = null,
+                            t = this.$,
+                            i = null;
+                        this.installed = -1;
+                        if (!t.isIE) {
+                            if (t.hasMimeType(this.mimeType)) {
+                                if (t.findNavPlugin(["Windows", "Media", "(Plug-in|Plugin)"], false) || t.findNavPlugin(["Flip4Mac", "Windows", "Media"], false)) {
+                                    this.installed = 0
+                                }
+                                var n = t.isGecko && t.compareNums(t.GeckoRV, t.formatNum("1.8")) < 0;
+                                if (!n && t.findNavPlugin(["Windows", "Media", "Firefox Plugin"], false)) {
+                                    var a = t.instantiate("object", ["type", this.mimeType[0]], []),
+                                        r = t.getObject(a);
+                                    if (r) {
+                                        e = r.versionInfo
+                                    }
+                                    t.uninstantiate(a)
+                                }
+                            }
+                        } else {
+                            i = t.getAXO(this.progID);
+                            if (i) {
+                                e = i.versionInfo
+                            }
+                        }
+                        if (e) {
+                            this.installed = 1
+                        }
+                        this.version = t.formatNum(e)
+                    }
+                };
+                PluginDetect.silverlight = {
+                    mimeType: "application/x-silverlight",
+                    progID: "AgControl.AgControl",
+                    digits: [9, 20, 9, 12, 31],
+                    getVersion: function() {
+                        var e = this.$,
+                            t = document,
+                            i = null,
+                            n = null,
+                            a = false;
+                        if (!e.isIE) {
+                            var r = [null, null],
+                                s = e.findNavPlugin("Silverlight Plug-in", false),
+                                o = e.isGecko && e.compareNums(e.GeckoRV, e.formatNum("1.6")) <= 0;
+                            if (s && e.hasMimeType(this.mimeType)) {
+                                i = e.formatNum(s.description);
+                                if (i) {
+                                    l = i.split(",");
+                                    if (parseInt(l[2], 10) >= 30226 && parseInt(l[0], 10) < 2) {
+                                        l[0] = "2"
+                                    }
+                                    i = l.join(",")
+                                }
+                                if (e.isGecko && !o) {
+                                    a = true
+                                }
+                                if (!a && !o && i) {
+                                    r = e.instantiate("object", ["type", this.mimeType], []);
+                                    n = e.getObject(r);
+                                    if (n) {
+                                        if (typeof n.IsVersionSupported != "undefined") {
+                                            a = true
+                                        }
+                                        if (!a) {
+                                            n.data = "data:" + this.mimeType + ",";
+                                            if (typeof n.IsVersionSupported != "undefined") {
+                                                a = true
+                                            }
+                                        }
+                                    }
+                                    e.uninstantiate(r)
+                                }
+                            }
+                        } else {
+                            n = e.getAXO(this.progID);
+                            var l = [1, 0, 1, 1, 1],
+                                u, c, f, d = function(e) {
+                                    return (e < 10 ? "0" : "") + e.toString()
+                                },
+                                p = function(e, t, i, n, a) {
+                                    return e + "." + t + "." + i + d(n) + d(a) + ".0"
+                                },
+                                g = function(e, t) {
+                                    var i, a = p(e == 0 ? t : l[0], e == 1 ? t : l[1], e == 2 ? t : l[2], e == 3 ? t : l[3], e == 4 ? t : l[4]);
+                                    try {
+                                        return n.IsVersionSupported(a)
+                                    } catch (i) {}
+                                    return false
+                                };
+                            if (n && typeof n.IsVersionSupported != "undefined") {
+                                for (u = 0; u < this.digits.length; u++) {
+                                    f = l[u];
+                                    for (c = f + (u == 0 ? 0 : 1); c <= this.digits[u]; c++) {
+                                        if (g(u, c)) {
+                                            a = true;
+                                            l[u] = c
+                                        } else {
+                                            break
+                                        }
+                                    }
+                                    if (!a) {
+                                        break
+                                    }
+                                }
+                                if (a) {
+                                    i = p(l[0], l[1], l[2], l[3], l[4])
+                                }
+                            }
+                        }
+                        this.installed = a ? 1 : -1;
+                        this.version = e.formatNum(i)
+                    }
+                };
+                PluginDetect.vlc = {
+                    mimeType: "application/x-vlc-plugin",
+                    progID: "VideoLAN.VLCPlugin",
+                    compareNums: function(e, t) {
+                        var i = e.split(","),
+                            n = t.split(","),
+                            a, r, s, o, l, u;
+                        for (a = 0; a < Math.min(i.length, n.length); a++) {
+                            u = /([\d]+)([a-z]?)/.test(i[a]);
+                            r = parseInt(RegExp.$1, 10);
+                            o = a == 2 && RegExp.$2.length > 0 ? RegExp.$2.charCodeAt(0) : -1;
+                            u = /([\d]+)([a-z]?)/.test(n[a]);
+                            s = parseInt(RegExp.$1, 10);
+                            l = a == 2 && RegExp.$2.length > 0 ? RegExp.$2.charCodeAt(0) : -1;
+                            if (r != s) {
+                                return r > s ? 1 : -1
+                            }
+                            if (a == 2 && o != l) {
+                                return o > l ? 1 : -1
+                            }
+                        }
+                        return 0
+                    },
+                    getVersion: function() {
+                        var e = this.$,
+                            t, i = null,
+                            n;
+                        if (!e.isIE) {
+                            if (e.hasMimeType(this.mimeType)) {
+                                t = e.findNavPlugin(["VLC", "(Plug-in|Plugin)"], false);
+                                if (t && t.description) {
+                                    i = e.getNum(t.description, "[\\d][\\d\\.]*[a-z]*")
+                                }
+                            }
+                            this.installed = i ? 1 : -1
+                        } else {
+                            t = e.getAXO(this.progID);
+                            if (t) {
+                                try {
+                                    i = e.getNum(t.VersionInfo, "[\\d][\\d\\.]*[a-z]*")
+                                } catch (n) {}
+                            }
+                            this.installed = t ? 1 : -1
+                        }
+                        this.version = e.formatNum(i)
+                    }
+                };
+                PluginDetect.initScript();
+                var version;
+                for (var i = 0; i < iePlugins.length; i++) {
+                    version = PluginDetect.getVersion(iePlugins[i]);
+                    if (version) {
+                        plugins.push(iePlugins[i])
+                    }
+                }
+                plugins.push(ieAcrobatVersion())
+            }
+            sort(plugins);
+            resultsFromProbes["pl"] = {
+                list: plugins,
+                fullHash: hash(plugins)
+            };
+
+            function hash(e) {
+                if (e.length == 0) return "";
+                return e.join("|")
+            }
+
+            function sort(e) {
+                e.sort(function(e, t) {
+                    var i = e,
+                        n = t;
+                    if (i == n) {
+                        return 0
+                    } else {
+                        return i < n ? -1 : 1
+                    }
+                })
+            }
+        }();
+        ! function() {
+            resultsFromProbes["sc"] = [getWindowData("screen", "width"), getWindowData("screen", "height"), getWindowData("screen", "availWidth"), getWindowData("screen", "availHeight"), getWindowData("screen", "pixelDepth"), getWindowData("screen", "deviceXDPI"), getWindowData("screen", "deviceYDPI")].join("|")
+        }();
+        ! function() {
+            ! function(e) {
+                var t = function() {
+                    "use strict";
+                    var e = "s",
+                        i = function(e) {
+                            var t = -e.getTimezoneOffset();
+                            return t !== null ? t : 0
+                        },
+                        n = function(e, t, i) {
+                            var n = new Date;
+                            if (e !== undefined) {
+                                n.setFullYear(e)
+                            }
+                            n.setMonth(t);
+                            n.setDate(i);
+                            return n
+                        },
+                        a = function(e) {
+                            return i(n(e, 0, 2))
+                        },
+                        r = function(e) {
+                            return i(n(e, 5, 2))
+                        },
+                        s = function(e) {
+                            var t = e.getMonth() > 7,
+                                n = t ? r(e.getFullYear()) : a(e.getFullYear()),
+                                s = i(e),
+                                o = n < 0,
+                                l = n - s;
+                            if (!o && !t) {
+                                return l < 0
+                            }
+                            return l !== 0
+                        },
+                        o = function() {
+                            var t = a(),
+                                i = r(),
+                                n = t - i;
+                            if (n < 0) {
+                                return t + ",1"
+                            } else if (n > 0) {
+                                return i + ",1," + e
+                            }
+                            return t + ",0"
+                        },
+                        l = function() {
+                            var e = o();
+                            return new t.TimeZone(t.olson.timezones[e])
+                        },
+                        u = function(e) {
+                            var t = new Date(2010, 6, 15, 1, 0, 0, 0),
+                                i = {
+                                    "America/Denver": new Date(2011, 2, 13, 3, 0, 0, 0),
+                                    "America/Mazatlan": new Date(2011, 3, 3, 3, 0, 0, 0),
+                                    "America/Chicago": new Date(2011, 2, 13, 3, 0, 0, 0),
+                                    "America/Mexico_City": new Date(2011, 3, 3, 3, 0, 0, 0),
+                                    "America/Asuncion": new Date(2012, 9, 7, 3, 0, 0, 0),
+                                    "America/Santiago": new Date(2012, 9, 3, 3, 0, 0, 0),
+                                    "America/Campo_Grande": new Date(2012, 9, 21, 5, 0, 0, 0),
+                                    "America/Montevideo": new Date(2011, 9, 2, 3, 0, 0, 0),
+                                    "America/Sao_Paulo": new Date(2011, 9, 16, 5, 0, 0, 0),
+                                    "America/Los_Angeles": new Date(2011, 2, 13, 8, 0, 0, 0),
+                                    "America/Santa_Isabel": new Date(2011, 3, 5, 8, 0, 0, 0),
+                                    "America/Havana": new Date(2012, 2, 10, 2, 0, 0, 0),
+                                    "America/New_York": new Date(2012, 2, 10, 7, 0, 0, 0),
+                                    "Europe/Helsinki": new Date(2013, 2, 31, 5, 0, 0, 0),
+                                    "Pacific/Auckland": new Date(2011, 8, 26, 7, 0, 0, 0),
+                                    "America/Halifax": new Date(2011, 2, 13, 6, 0, 0, 0),
+                                    "America/Goose_Bay": new Date(2011, 2, 13, 2, 1, 0, 0),
+                                    "America/Miquelon": new Date(2011, 2, 13, 5, 0, 0, 0),
+                                    "America/Godthab": new Date(2011, 2, 27, 1, 0, 0, 0),
+                                    "Europe/Moscow": t,
+                                    "Asia/Amman": new Date(2013, 2, 29, 1, 0, 0, 0),
+                                    "Asia/Beirut": new Date(2013, 2, 31, 2, 0, 0, 0),
+                                    "Asia/Damascus": new Date(2013, 3, 6, 2, 0, 0, 0),
+                                    "Asia/Jerusalem": new Date(2013, 2, 29, 5, 0, 0, 0),
+                                    "Asia/Yekaterinburg": t,
+                                    "Asia/Omsk": t,
+                                    "Asia/Krasnoyarsk": t,
+                                    "Asia/Irkutsk": t,
+                                    "Asia/Yakutsk": t,
+                                    "Asia/Vladivostok": t,
+                                    "Asia/Baku": new Date(2013, 2, 31, 4, 0, 0),
+                                    "Asia/Yerevan": new Date(2013, 2, 31, 3, 0, 0),
+                                    "Asia/Kamchatka": t,
+                                    "Asia/Gaza": new Date(2010, 2, 27, 4, 0, 0),
+                                    "Africa/Cairo": new Date(2010, 4, 1, 3, 0, 0),
+                                    "Europe/Minsk": t,
+                                    "Pacific/Apia": new Date(2010, 10, 1, 1, 0, 0, 0),
+                                    "Pacific/Fiji": new Date(2010, 11, 1, 0, 0, 0),
+                                    "Australia/Perth": new Date(2008, 10, 1, 1, 0, 0, 0)
+                                };
+                            return i[e]
+                        };
+                    return {
+                        determine: l,
+                        date_is_dst: s,
+                        dst_start_for: u
+                    }
+                }();
+                t.TimeZone = function(e) {
+                    "use strict";
+                    var i = {
+                            "America/Denver": ["America/Denver", "America/Mazatlan"],
+                            "America/Chicago": ["America/Chicago", "America/Mexico_City"],
+                            "America/Santiago": ["America/Santiago", "America/Asuncion", "America/Campo_Grande"],
+                            "America/Montevideo": ["America/Montevideo", "America/Sao_Paulo"],
+                            "Asia/Beirut": ["Asia/Amman", "Asia/Jerusalem", "Asia/Beirut", "Europe/Helsinki", "Asia/Damascus"],
+                            "Pacific/Auckland": ["Pacific/Auckland", "Pacific/Fiji"],
+                            "America/Los_Angeles": ["America/Los_Angeles", "America/Santa_Isabel"],
+                            "America/New_York": ["America/Havana", "America/New_York"],
+                            "America/Halifax": ["America/Goose_Bay", "America/Halifax"],
+                            "America/Godthab": ["America/Miquelon", "America/Godthab"],
+                            "Asia/Dubai": ["Europe/Moscow"],
+                            "Asia/Dhaka": ["Asia/Yekaterinburg"],
+                            "Asia/Jakarta": ["Asia/Omsk"],
+                            "Asia/Shanghai": ["Asia/Krasnoyarsk", "Australia/Perth"],
+                            "Asia/Tokyo": ["Asia/Irkutsk"],
+                            "Australia/Brisbane": ["Asia/Yakutsk"],
+                            "Pacific/Noumea": ["Asia/Vladivostok"],
+                            "Pacific/Tarawa": ["Asia/Kamchatka", "Pacific/Fiji"],
+                            "Pacific/Tongatapu": ["Pacific/Apia"],
+                            "Asia/Baghdad": ["Europe/Minsk"],
+                            "Asia/Baku": ["Asia/Yerevan", "Asia/Baku"],
+                            "Africa/Johannesburg": ["Asia/Gaza", "Africa/Cairo"]
+                        },
+                        n = e,
+                        a = function() {
+                            var e = i[n],
+                                a = e.length,
+                                r = 0,
+                                s = e[0];
+                            for (; r < a; r += 1) {
+                                s = e[r];
+                                if (t.date_is_dst(t.dst_start_for(s))) {
+                                    n = s;
+                                    return
+                                }
+                            }
+                        },
+                        r = function() {
+                            return typeof i[n] !== "undefined"
+                        };
+                    if (r()) {
+                        a()
+                    }
+                    return {
+                        name: function() {
+                            return n
+                        }
+                    }
+                };
+                t.olson = {};
+                t.olson.timezones = {
+                    "-720,0": "Pacific/Majuro",
+                    "-660,0": "Pacific/Pago_Pago",
+                    "-600,1": "America/Adak",
+                    "-600,0": "Pacific/Honolulu",
+                    "-570,0": "Pacific/Marquesas",
+                    "-540,0": "Pacific/Gambier",
+                    "-540,1": "America/Anchorage",
+                    "-480,1": "America/Los_Angeles",
+                    "-480,0": "Pacific/Pitcairn",
+                    "-420,0": "America/Phoenix",
+                    "-420,1": "America/Denver",
+                    "-360,0": "America/Guatemala",
+                    "-360,1": "America/Chicago",
+                    "-360,1,s": "Pacific/Easter",
+                    "-300,0": "America/Bogota",
+                    "-300,1": "America/New_York",
+                    "-270,0": "America/Caracas",
+                    "-240,1": "America/Halifax",
+                    "-240,0": "America/Santo_Domingo",
+                    "-240,1,s": "America/Santiago",
+                    "-210,1": "America/St_Johns",
+                    "-180,1": "America/Godthab",
+                    "-180,0": "America/Argentina/Buenos_Aires",
+                    "-180,1,s": "America/Montevideo",
+                    "-120,0": "America/Noronha",
+                    "-120,1": "America/Noronha",
+                    "-60,1": "Atlantic/Azores",
+                    "-60,0": "Atlantic/Cape_Verde",
+                    "0,0": "UTC",
+                    "0,1": "Europe/London",
+                    "60,1": "Europe/Berlin",
+                    "60,0": "Africa/Lagos",
+                    "60,1,s": "Africa/Windhoek",
+                    "120,1": "Asia/Beirut",
+                    "120,0": "Africa/Johannesburg",
+                    "180,0": "Asia/Baghdad",
+                    "180,1": "Europe/Moscow",
+                    "210,1": "Asia/Tehran",
+                    "240,0": "Asia/Dubai",
+                    "240,1": "Asia/Baku",
+                    "270,0": "Asia/Kabul",
+                    "300,1": "Asia/Yekaterinburg",
+                    "300,0": "Asia/Karachi",
+                    "330,0": "Asia/Kolkata",
+                    "345,0": "Asia/Kathmandu",
+                    "360,0": "Asia/Dhaka",
+                    "360,1": "Asia/Omsk",
+                    "390,0": "Asia/Rangoon",
+                    "420,1": "Asia/Krasnoyarsk",
+                    "420,0": "Asia/Jakarta",
+                    "480,0": "Asia/Shanghai",
+                    "480,1": "Asia/Irkutsk",
+                    "525,0": "Australia/Eucla",
+                    "525,1,s": "Australia/Eucla",
+                    "540,1": "Asia/Yakutsk",
+                    "540,0": "Asia/Tokyo",
+                    "570,0": "Australia/Darwin",
+                    "570,1,s": "Australia/Adelaide",
+                    "600,0": "Australia/Brisbane",
+                    "600,1": "Asia/Vladivostok",
+                    "600,1,s": "Australia/Sydney",
+                    "630,1,s": "Australia/Lord_Howe",
+                    "660,1": "Asia/Kamchatka",
+                    "660,0": "Pacific/Noumea",
+                    "690,0": "Pacific/Norfolk",
+                    "720,1,s": "Pacific/Auckland",
+                    "720,0": "Pacific/Tarawa",
+                    "765,1,s": "Pacific/Chatham",
+                    "780,0": "Pacific/Tongatapu",
+                    "780,1,s": "Pacific/Apia",
+                    "840,0": "Pacific/Kiritimati"
+                };
+                if (typeof exports !== "undefined") {
+                    exports.jstz = t
+                } else {
+                    e.jstz = t
+                }
+            }(this);
+            resultsFromProbes["tz"] = jstz.determine().name()
+        }();
+        ! function() {
+            var e = false;
+            try {
+                e = !!window.localStorage
+            } catch (t) {
+                e = true
+            }
+            var i = false;
+            try {
+                i = !!window.sessionStorage
+            } catch (t) {
+                i = true
+            }
+            resultsFromProbes["bcap"] = [e, i, getWindowData("navigator", "cookieEnabled")].join("|")
+        }();
+        ! function() {
+            resultsFromProbes["lges"] = [getWindowData("navigator", "browserLanguage"), getWindowData("navigator", "language"), getWindowData("navigator", "userLanguage")].join("|")
+        }();
+        ! function() {
+            resultsFromProbes["ob"] = [getWindowData("navigator", "appCodeName"), getWindowData("navigator", "appName"), getWindowData("navigator", "platform"), getWindowData("navigator", "cpuClass")].join("|")
+        }();
+        asyncProbes.push(function() {
+            var e = new Promise;
+
+            function t() {
+                var t = function(e) {
+                    var t = ["monospace", "sans-serif", "serif"];
+                    var i = "mmmmmmmmmmlli";
+                    var n = "72px";
+                    if (e != "dom") {
+                        var a = "canvas";
+                        var r = document.createElement("canvas");
+                        r.width = "100";
+                        r.height = "100";
+                        globalContainer.appendChild(r)
+                    }
+                    if (!r || typeof r.getContext != "function") {
+                        a = "dom";
+                        var s = globalContainer;
+                        var o = document.createElement("span");
+                        o.style.fontSize = n;
+                        o.innerHTML = i;
+                        var l = {};
+                        var u = {};
+                        for (var c = 0; c < t.length; c++) {
+                            o.style.fontFamily = t[c];
+                            s.appendChild(o);
+                            l[t[c]] = o.offsetWidth;
+                            u[t[c]] = o.offsetHeight;
+                            s.removeChild(o)
+                        }
+                    } else {
+                        var f = r.getContext("2d");
+                        var l = {};
+                        for (var c = 0; c < t.length; c++) {
+                            f.font = n + " " + t[c];
+                            l[t[c]] = f.measureText(i).width
+                        }
+                    }
+
+                    function d(e) {
+                        var r = false;
+                        for (var c = 0; c < t.length; c++) {
+                            if (a == "dom") {
+                                o.style.fontFamily = e + "," + t[c];
+                                s.appendChild(o);
+                                var d = o.offsetWidth != l[t[c]] || o.offsetHeight != u[t[c]];
+                                s.removeChild(o)
+                            } else if (a == "canvas") {
+                                f.font = n + " " + e + "," + t[c];
+                                var d = f.measureText(i).width != l[t[c]]
+                            }
+                            r = r || d
+                        }
+                        return r
+                    }
+                    this.detect = d;
+                    this.method = a
+                };
+                var i = ["AR DARLING", "Earwig Factory", "Minya Nouvelle", "Burnstown Dam", "Sybil Green", "Stereofidelic", "Urdu Typesetting", "Blue Highway Linocut", "Credit Valley", "Velvenda Cooler", "Mufferaw", "Huxtable", "Boopee", "Kefa", "Nanum Myeongjo", "LuzSans-Book", "Castro Script PERSONAL USE ONLY", "8514oem", "Gentium Book Basic", "Sitka Subheading", "Mishafi", "Wickenden Cafe NDP", "Jenna Sue", "Symusic", "Monotxt", "CG Omega", "Reprise Metronome", "CAMPBELL", "MAXIMO", "IRIS", "HUNTSON", "AcadEref", "Lucida Grande CY", "Tall Paul", "Simply*Glamorous", "Australian Sunrise", "Photoshop Large", "Circus", "Outright Televism", "Contribute_FREE-version", "KENDRIC", "HGP-AGothic2-Latin1K", "AVGmdBU", "ReservoirGrunge", "FIRSTHOME", "LYNN", "BRODY", "Bergamot Ornaments", "Return To Sender", "Bleeding Cowboys", "LCD", "Goudy", "Oxford", "Budmo Jiggler", "Alba Matter", "Denmark", "Girls are Weird", "Channel Left-Slanted", "Traveling _Typewriter", "Teletype", "Cuckoo", "MARKETPRO", "ABIGAIL", "JACKIE", "Carnivalee Freakshow", "NewZurica", "OldCentury", "LongIsland", "Fontdinerdotcom Sparkly", "PAINTSTROKE", "Mona Lisa Recut", "Times New Roman Symbol", "ESRI Enviro Hazard Incident", "TextilePiEF", "Edda", "EcuyerDAX", "Bodoni PosterCompressed", "MapInfo Cartographic", "ESRI NIMA City Graphic LN", "Virtual DJ", "MS SystemEx", "AdineKirnberg-Script", "Exmouth", "OPENCLASSIC", "Sweetly Broken", "English Essay", "Jenkins v2.0", "Architects Daughter", "Taffy", "Weltron Urban", "1942 report", "Fat", "Rod Transparent", "SimSun-PUA", "Before the Rain Swashes DEMO", "Abraham Lincoln", "Opus Japanese Chords", "Agent Orange", "Almonte Snow", "Luciano", "HenryMorganHand", "KG Skinny Latte", "CANDY INC.", "Tango BT", "GrutchShaded", "Segoe Media Center Semibold", "Kiev", "Lobster 1.3", "Tabitha", "Bimini", "OptimusPrinceps", "Ostrich Sans Dashed Medium", "DK Crayon Crumble", "DYMObvba", "28 Days Later", "Engaged", "always * forever", "Loki Cola", "Connecticut", "Pea Ellie Bellie", "Utah", "MICR", "Things We Said", "Stars & Stripes", "Rope MF", "Lato Hairline", "GilliesGotDLig", "Antique Olive CompactPS", "CaslonNo540SwaD", "SF Movie Poster", "CaslonAntT", "Josefin Slab", "PegsannaHMK", "Impact Label Reversed", "Ubuntu", "Oh {Photo} Shoot!", "Deftone Stylus", "CluffHmk", "Incised901 BdCn BT", "Respective 2.0", "Parry Hotter", "NotnorvalHmk", "odstemplik", "Ethnocentric", "Miserably Lose", "SAS Monospace", "Stonehenge", "BethsCuteHmk", "BixAntiqueScriptHmk", "MicrogrammaDMedExt", "StarbabeHmk", "FFF Tusj", "BoogieWoogieHmk", "Star Jedi Hollow", "Eight Fifteen", "Ribbon", "Helsinki Narrow", "San Diego", "Jewels", "Baskerville-Old-Face", "OCR-A", "OttumHmk", "Mr and Mrs Popsicle", "Symbol Tiger Expert", "URWAlcuinT", "DynameBlackSSK", "Monster Paparazzi", "My Own Topher", "LainieDaySH", "Duchess", "New England Engraved", "Bitstream Vera Serif", "Hand Of Sean", "HeiT", "Vive", "Penmanship Print", "Spicy Sushi Roll", "Jennifer Lynne", "Minion Pro SmBd Ital", "Cumberland AMT", "Expose", "Everytime I Miss You", "Katy Berry", "A Red Bucket", "Walkway RevOblique", "Impregnable Personal Use Only", "Salsa Mangos BTN Lt", "Geo 957", "dearJoe4", "Janda Apple Cobbler Solid", "Sketch Rockwell", "Shit Happens", "jailbIrD JenNA", "Firefly Castle", "Tonight's the Night", "Jellyka BeesAntique Handwriting", "REALVIRTUE", "USPS4CB", "Swis721 WGL4 BT", "Beautiful Every Time", "GOST Common", "Highland Perk", "ChunkFive Roman", "ArabBruD", "Rebekah's Birthday"];
+                var n = i.slice(0),
+                    a = [];
+                try {
+                    if (navigator.userAgent.indexOf("Firefox") != -1 && navigator.userAgent.indexOf("Macintosh") != -1 && navigator.userAgent.indexOf("Gecko") != -1) {
+                        var r = new t("dom");
+                        stats.count("fonts.detector.forced_dom", 1)
+                    } else {
+                        var r = new t
+                    }
+                } catch (s) {
+                    var r = new t("dom");
+                    stats.count("fonts.detector.error", 1)
+                }
+                var o = r.method == "canvas" ? 100 : 10;
+                var l = function() {
+                    setTimeout(function() {
+                        for (var t = 0; t < Math.min(o, n.length); t++) {
+                            var i = n.splice(0, 1),
+                                s = r.detect(i);
+                            if (s) {
+                                a[a.length] = i
+                            }
+                        }
+                        if (n.length == 0) {
+                            e.resolve({
+                                list: a.join().split(","),
+                                fullHash: a.join(),
+                                method: r.method
+                            })
+                        } else {
+                            l()
+                        }
+                    }, 1)
+                };
+                l()
+            }
+            return {
+                name: "fts",
+                get: function() {
+                    return e
+                },
+                init: function() {
+                    domReady.then(t).done()
+                }
+            }
+        }());
+
+        function forEachAsyncProbe(e) {
+            for (var t = 0; t < asyncProbes.length; t++) {
+                e(asyncProbes[t])
+            }
+        }
+
+        function gotSomething(e, t) {
+            numberOfResultsFromProbes++;
+            if (promise.isFulfilled()) {
+                return
+            }
+            resultsFromProbes[e.name] = t;
+            if (numberOfResultsFromProbes == asyncProbes.length) {
+                promise.resolve(resultsFromProbes)
+            }
+        }
+        forEachAsyncProbe(function(e) {
+            if (uuidPromise.isFulfilled()) {
+                gotSomething(e)
+            } else {
+                e.get().then(function(t) {
+                    gotSomething(e, t)
+                }).fail(function(t) {
+                    if (typeof t == "undefined") {
+                        t = {
+                            message: "No message specified."
+                        }
+                    }
+                    gotSomething(e)
+                }).done()
+            }
+        });
+        return {
+            get: function() {
+                return promise
+            },
+            init: function() {
+                forEachAsyncProbe(function(e) {
+                    e.init()
+                })
+            }
+        }
+    }();
+
+    function loadUUID(e, t, i) {
+        var n;
+        var a;
+        if ("ex" in e) {
+            n = e["ex"]
+        } else if ("src" in e) {
+            n = e["src"]
+        } else if ("key" in e) {
+            n = e["key"]
+        }
+        a = document.domain;
+        var r;
+        if (t && t.length != 0) {
+            r = {
+                mathid_data: JSON.stringify(t)
+            }
+        } else {
+            r = {}
+        }
+        if (n && n.length != 0) {
+            r.cid_api_key = n
+        }
+        if (a && a.length != 0) {
+            r.cid_api_domain = a
+        }
+        http.jsonp(config.pixelServerURL + "u/js", r).then(i)
+    }
+
+    function firstDOMReady() {
+        globalContainer = document.createElement("div");
+        globalContainer.setAttribute("id", "mid-container");
+        globalContainer.setAttribute("style", "position: absolute; top: -1000px; left: -1000px;");
+        document.body.appendChild(globalContainer)
+    }
+    window.MathID = function() {
+        var e = false,
+            t = {};
+        dataPromise.then(function() {
+            var e = (new Date).getTime();
+            stats.count("exec.success.qps", 1);
+            stats.time("exec.success.time", e - startTime);
+            stats.send()
+        }).fail(function() {
+            var e = (new Date).getTime();
+            stats.count("exec.failure.qps", 1);
+            stats.time("exec.failure.time", e - startTime);
+            stats.send()
+        });
+
+        function i() {
+            probe.get().then(function(e) {
+                n(null, e)
+            }).done()
+        }
+
+        function n(e, i) {
+            if (!i) {
+                a({
+                    dv1: "",
+                    dv2: "",
+                    dv3: "",
+                    dv4: "",
+                    dv5: "",
+                    dv6: e && typeof e == "string" ? base64.encode(e) : "",
+                    dv7: base64.encode("0"),
+                    dv8: "",
+                    dv9: "",
+                    dv10: ""
+                }, null)
+            } else {
+                var n = typeof i["fts"] != "undefined" && i["fts"] != null && typeof i["fts"]["fullHash"] != "undefined" && i["fts"]["fullHash"].length > 0 ? base64.encode(md5(i["fts"]["fullHash"])) : "";
+                var r = typeof i["pl"] != "undefined" && i["pl"] != null && typeof i["pl"]["fullHash"] != "undefined" && i["pl"]["fullHash"].length > 0 ? base64.encode(md5(i["pl"]["fullHash"])) : "";
+                var s = typeof i["sc"] != "undefined" && i["sc"] != null ? base64.encode(i["sc"]) : "";
+                var o = typeof i["tz"] != "undefined" && i["tz"] != null ? base64.encode(i["tz"]) : "";
+                var l = e ? base64.encode(e) : "";
+                var u = typeof i["bcap"] != "undefined" ? base64.encode(i["bcap"]) : "";
+                var c = typeof i["lges"] != "undefined" ? base64.encode(i["lges"]) : "";
+                var f = typeof i["ob"] != "undefined" ? base64.encode(i["ob"]) : "";
+                var d = "0";
+                if (e == "optout") d = "1";
+                else if (typeof i["optout"] != "undefined") d = i["optout"];
+                d = base64.encode(d);
+                var p = typeof i["fts"] != "undefined" && i["fts"] != null && typeof i["fts"]["list"] != "undefined" ? base64.encode(JSON.stringify(i["fts"]["list"])) : [];
+                var g = typeof i["pl"] != "undefined" && i["pl"] != null && typeof i["pl"]["list"] != "undefined" ? base64.encode(JSON.stringify(i["pl"]["list"])) : [];
+                var m = {
+                    dv1: base64.encode(navigator.userAgent),
+                    dv2: n,
+                    dv3: r,
+                    dv4: s,
+                    dv5: o,
+                    dv6: l,
+                    dv7: d,
+                    dv8: u,
+                    dv9: c,
+                    dv10: f
+                };
+                var h = {
+                    dv1: base64.encode(navigator.userAgent),
+                    dv2: p,
+                    dv3: g,
+                    dv4: s,
+                    dv5: o,
+                    dv6: "",
+                    dv7: n,
+                    dv8: r,
+                    dv9: l,
+                    dv10: u,
+                    dv11: c,
+                    dv12: f,
+                    cv1: t.mt_id ? base64.encode(t.mt_id) : "",
+                    cv2: t.ccid ? base64.encode(t.ccid) : "",
+                    cv3: t.cuid ? base64.encode(t.cuid) : "",
+                    cv4: t.mm_uuid ? base64.encode(t.mm_uuid) : "",
+                    pv1: base64.encode(document.referrer),
+                    pv2: base64.encode(document.location.href)
+                };
+                a(m, h)
+            }
+        }
+
+        function a(e, i) {
+            if (dataPromise.isFulfilled()) {
+                return
+            }
+            dataPromise.resolve(JSON.stringify(e));
+            midPromise.onActivate(function() {
+                if (midPromise.isFulfilled()) {
+                    return
+                }
+                http.jsonp(config.baseURL + "d/i", {
+                    data: JSON.stringify(e)
+                }).then(function(e) {
+                    if (e && typeof e == "object" && typeof e.mathid != "undefined") {
+                        if (e.mathid.length == 32) {
+                            midPromise.resolve(e.mathid)
+                        } else {
+                            midPromise.reject({
+                                message: "Empty server response"
+                            })
+                        }
+                    } else {
+                        midPromise.reject({
+                            message: "Invalid response from server"
+                        })
+                    }
+                })
+            });
+            uuidPromise.onActivate(function() {
+                if (uuidPromise.isFulfilled()) {
+                    return
+                }
+                loadUUID(t, e, function(e, t) {
+                    finalUuid = e && typeof e == "string" && e.length == 36 ? e : "";
+                    finalConnectedID = t && typeof t == "string" && t.length == 36 ? t : "";
+                    uuidPromise.resolve(finalUuid, finalConnectedID, "normal")
+                })
+            });
+            r(i)
+        }
+
+        function r(e) {
+            if (e && t.cuid && t.cuid.length > 0) {
+                setTimeout(function() {
+                    http.post(config.baseDirectURL + "d/l", e)
+                }, 2e3)
+            }
+        }
+
+        function s(e) {
+            switch (e) {
+                case "mid":
+                    return midPromise;
+                    break;
+                case "uuid":
+                    return uuidPromise;
+                    break;
+                default:
+                    return dataPromise;
+                    break
+            }
+        }
+
+        function o(n, a) {
+            if (e) return s(n);
+            e = true;
+            t = a || {};
+            uuidPromise.onActivate(function() {
+                loadUUID(t, null, function(e, t, i) {
+                    finalUuid = e && typeof e == "string" && e.length == 36 ? e : "";
+                    finalConnectedID = t && typeof t == "string" && t.length == 36 ? t : "";
+                    new_uuid = typeof i == "object" && typeof i.new_uuid == "boolean" ? i.new_uuid == true : true;
+                    if (finalUuid.length == 36 && new_uuid == false) {
+                        uuidPromise.resolve(finalUuid, finalConnectedID, "fastload")
+                    }
+                })
+            });
+            if (window.MathIDNT) {
+                config.timeOut = 20 * 1e3
+            }
+            i();
+            setTimeout(function() {
+                if (dataPromise.isFulfilledOrNotActivated() && midPromise.isFulfilledOrNotActivated() && uuidPromise.isFulfilledOrNotActivated()) {
+                    return
+                }
+                setTimeout(function() {
+                    dataPromise.reject({
+                        message: "MathID failed to execute in a reasonable time.",
+                        code: "timeout"
+                    });
+                    midPromise.reject({
+                        message: "MathID failed to execute in a reasonable time.",
+                        code: "timeout"
+                    });
+                    uuidPromise.reject({
+                        message: "MathID failed to execute in a reasonable time.",
+                        code: "timeout"
+                    })
+                }, 500)
+            }, config.timeOut);
+            if (typeof t.ex == "string") {
+                stats.count("source.exchanges." + t.ex, 1)
+            }
+            if (typeof t.src == "string") {
+                stats.count("source." + t.src, 1)
+            }
+            return s(n)
+        }
+        return {
+            identify: function(e) {
+                if (e && e.computeDeviceID) {
+                    return o("mid", e)
+                } else {
+                    return o("data", e)
+                }
+            },
+            getData: function(e) {
+                return o("data", e)
+            },
+            getMID: function(e) {
+                return o("mid", e)
+            },
+            getUUID: function(e) {
+                return o("uuid", e)
+            },
+            Callbacks: {}
+        }
+    }();
+    probe.init();
+    if (typeof MathIDInit == "function") {
+        MathIDInit()
+    }
+
+    function raiseCallbacks() {
+        if (typeof MathIDInits != "undefined" && Object.prototype.toString.call(MathIDInits) === "[object Array]" && MathIDInits.length > 0) {
+            var e = MathIDInits.length;
+            for (var t = 0; t < e; t++) {
+                MathIDInits.splice(0, 1)[0]()
+            }
+        }
+    }
+    raiseCallbacks();
+    setInterval(raiseCallbacks, 1e3)
+}();
+
+</script>
+
+</html>
