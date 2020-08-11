@@ -1,0 +1,38 @@
+<!-- sample code derived from fingerprint2.js -->
+<html>
+<title>Minor Changes Test Page</title>
+<h1>Minor Changes Test Page</h1>
+
+<p>An example paragraph tag</p>
+
+<p id="myPerformance"></p>
+<p id="myVibration"></p>
+<p id="myJava"></p>
+<p id="myBeacon"></p>
+<p id="myPermission"></p>
+<p id="myOnLine"></p>
+
+
+<script>
+
+    var myPerformance = document.getElementById('myPerformance');
+    myPerformance.innerHTML = performance.now();
+    
+    var myVibration = document.getElementById('myVibration');
+    myVibration.innerHTML = navigator.vibrate(200);
+    
+    var myJava = document.getElementById('myJava');
+    myJava.innerHTML = navigator.javaEnabled();
+    
+    var myBeacon = document.getElementById('myBeacon');
+    myBeacon.innerHTML = navigator.sendBeacon("https://www.google.com/", 1);
+    
+    var myPermission = document.getElementById('myPermission');
+    myPermission.innerHTML = navigator.permissions.query({name:'geolocation'});
+
+    var myOnLine = document.getElementById('myOnLine');
+    myOnLine.innerHTML = navigator.onLine;
+
+</script>
+
+</html>

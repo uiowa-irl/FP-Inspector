@@ -1,0 +1,36 @@
+<!-- sample code derived from fingerprint2.js -->
+<html>
+<title>WebGL Fingerprinting Test Page</title>
+<h1>WebGL Fingerprinting Test Page</h1>
+
+<canvas id="myWebGLCanvas"></canvas>
+<pre id="WebGLElement"></pre>
+
+<script>
+
+function getWebglFp() {
+    var result = [];
+
+    var canvas = document.createElement('canvas')
+    var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
+    result.push(gl.clearColor(0.0, 0.0, 0.0, 1.0));
+    result.push(gl.depthFunc(gl.LEQUAL));
+    result.push(gl.getParameter(gl.VENDOR));
+    
+    var fshader = gl.createShader(gl.FRAGMENT_SHADER);
+    var program = gl.createProgram();
+
+    result.push(fshader);
+    result.push(gl.getAttribLocation(program, 'attrVertex'));
+
+    return result
+}
+
+var webgl_fp = getWebglFp();
+
+var pre = document.getElementById("WebGLElement");
+pre.innerHTML = webgl_fp.join("\n");
+
+</script>
+
+</html>
