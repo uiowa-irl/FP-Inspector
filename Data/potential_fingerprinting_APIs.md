@@ -1,3 +1,4 @@
+## JavaScript APIs Frequently Used in Fingerprinting Scripts
 Below we provide a list of JavaScript API keywords frequently used by fingerprinting scripts. To this end, we measure the relative prevalence of API keywords in fingerprinting scripts by computing the ratio of their fraction of occurrence in fingerprinting scripts to their fraction of occurrence in non-fingerprinting scripts. A higher value of the ratio for a keyword means that it is more prevalent in fingerprinting scripts than non-fingerprinting scripts. Note that `infinity` means that the keyword is only present in fingerprinting scripts. For example, a value of 1.0 means that we only observe that keyword in fingerprinting scripts, whereas a value of 0.5 means we observe it in an equal number of fingerprinting and non-fingerprinting scripts.
 
 
