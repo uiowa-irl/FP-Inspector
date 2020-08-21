@@ -1,0 +1,4 @@
+[submodule "OpenWPM"]
+	path = OpenWPM
+	url = https://github.com/UmarIqbal/OpenWPM.git
+	branch = firefox-52-archive
