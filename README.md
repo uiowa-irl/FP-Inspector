@@ -51,9 +51,9 @@ Below we list some of our bug reports to filter lists.
 1. Issues reported to [Easylist/EasyPrivacy](https://github.com/easylist/easylist/issues/created_by/UmarIqbal)
 2. Issues reported to [Disconnect](https://github.com/disconnectme/disconnect-tracking-protection/issues/created_by/UmarIqbal)
 3. Bulk reports to [Fanboy](https://github.com/ryanbr) &mdash; who was extremely helpful to add them to EasyPrivacy. 
+5. Issues reported to DuckDuckGo
 
 > As a result of our reports to filter lists, EasyPrivacy has created a new category for fingerprinting in their filter list. Our findings to EasyPrivacy can be seen under the category `! Fingerprinting` in the [list](https://easylist.to/easylist/easyprivacy.txt).
-
 
 ### Bug reports to browser vendors 
 Below we list some of our bug reports to browser vendors.
