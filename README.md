@@ -17,7 +17,7 @@ Our modifications to OpenWPM are available in the [OpenWPM](https://github.com/U
 ## Fingerprinting Mitigation
 We implement the countermeasures listed in Section III-B of the [paper](https://umariqbal.com/papers/fpinspector-sp2021.pdf) in a browser extension to evaluate their breakage. The browser extension contains the countermeasures as options that can be selected one at a time. For API restriction, we override functions and properties of fingerprinting APIs and return an error message when they are accessed on any webpage. For targeted API restriction, we extract a script's domain by traversing the stack each time the script makes a call to one of the fingerprinting APIs. We use FP-Inspector's classifier determinations to create a domain-level (eTLD+1, which matches Disconnect's fingerprinting list used by Firefox) filter list. For request blocking, we use the `webRequest` API to intercept and block outgoing web requests that match our filter list. We extend [Cliqz content blocking library](https://github.com/cliqz-oss/adblocker) to implement request blocking. 
 
-Our prototype extension is available in the [coming soon]() directory.
+Our prototype extension is available in the [FP-Container](https://github.com/uiowa-irl/FP-Inspector/blob/master/FP-Container) directory. It was developed by [Charlie Wolfe](https://github.com/charliewolfe)
 
 
 ## Detections and Discoveries
